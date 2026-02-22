@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karma Claims | AI Consumer Justice</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kcbg: '#06080f',
+                        kcpanel: 'rgba(255,255,255,0.028)',
+                        kcaccent: '#63dcbe',
+                        kcborder: 'rgba(255,255,255,0.07)',
+                        kcmuted: '#5a6070',
+                    },
+                    fontFamily: {
+                        display: ['Syne', 'sans-serif'],
+                        mono: ['"DM Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #06080f; color: #e8edf5; overflow-x: hidden; }
+
+        /* Claude's Noise Texture Overlay */
+        body::before {
+            content: ''; position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+            opacity: 0.025; pointer-events: none; z-index: 0;
+        }
+
+        /* Claude's Ambient Glow Orbs */
+        .orb { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; }
+        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(99,220,190,0.12) 0%, transparent 70%); top: -150px; right: -100px; animation: drift 18s ease-in-out infinite alternate; }
+        .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%); bottom: -100px; left: -100px; animation: drift 22s ease-in-out infinite alternate-reverse; }
+
+        @keyframes drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(30px, -30px) scale(1.1); } }
+
+        /* Input styling & Custom Scrollbar */
+        input:focus, textarea:focus { border-color: rgba(99,220,190,0.4) !important; box-shadow: 0 0 0 3px rgba(99,220,190,0.07) !important; outline: none; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(99,220,190,0.3); border-radius: 10px; }
+        
+        /* Typewriter Cursor */
+        .cursor { display: inline-block; width: 2px; height: 1em; background: #63dcbe; margin-left: 2px; animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
+</head>
+<body class="font-display antialiased selection:bg-kcaccent selection:text-kcbg">
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="relative z-10 max-w-6xl mx-auto p-6 md:p-12 min-h-screen flex flex-col">
+        
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 border-b border-kcborder pb-8 gap-6">
+            <div>
+                <div class="font-mono text-[10px] text-kcaccent tracking-[0.25em] uppercase mb-2 opacity-80">// Consumer Justice Engine v2.0</div>
+                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-none">KARMA<br><span class="text-kcaccent">CLAIMS</span></h1>
+            </div>
+            <div class="flex flex-col items-start md:items-end gap-2">
+                <div class="inline-flex items-center gap-2 font-mono text-[11px] text-kcaccent bg-kcaccent/10 border border-kcaccent/20 px-4 py-1.5 rounded-full">
+                    <span class="w-1.5 h-1.5 bg-kcaccent rounded-full animate-pulse"></span>
+                    System Online
+                </div>
+                <div class="font-mono text-[10px] text-kcmuted">IN — 2026</div>
+            </div>
+        </header>
+
+        <div class="grid lg:grid-cols-2 gap-px bg-kcborder rounded-3xl overflow-hidden flex-grow shadow-2xl">
+            
+            <div class="bg-kcpanel backdrop-blur-xl p-8 md:p-10 flex flex-col justify-between">
+                <div>
+                    <div class="font-mono text-[10px] text-kcmuted tracking-[0.2em] uppercase mb-8 flex items-center gap-3">
+                        01 — Incident Details <span class="h-px bg-kcborder flex-grow"></span>
+                    </div>
+
+                    <div class="space-y-5 font-mono">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] tracking-[0.15em] text-kcmuted uppercase mb-2">Registered Mobile</label>
+                                <div class="flex">
+                                    <span class="flex items-center px-3.5 text-xs text-kcaccent bg-kcaccent/5 border border-r-0 border-kcborder rounded-l-xl">+91</span>
+                                    <input id="userPhone" type="text" maxlength="10" placeholder="10-digit number" class="w-full bg-white/5 border border-kcborder rounded-r-xl p-3.5 text-[13px] text-white placeholder-kcmuted transition-all">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] tracking-[0.15em] text-kcmuted uppercase mb-2">Email ID</label>
+                                <input id="userEmail" type="email" placeholder="name@example.com" class="w-full bg-white/5 border border-kcborder rounded-xl p-3.5 text-[13px] text-white placeholder-kcmuted transition-all">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] tracking-[0.15em] text-kcmuted uppercase mb-2">Target Company</label>
+                            <input id="company" type="text" placeholder="e.g. ZOMATO, SWIGGY, AMAZON" class="w-full bg-white/5 border border-kcborder rounded-xl p-3.5 text-[13px] text-white placeholder-kcmuted transition-all">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] tracking-[0.15em] text-kcmuted uppercase mb-2">Order / Reference ID</label>
+                                <input id="orderId" type="text" placeholder="Required" class="w-full bg-white/5 border border-kcborder rounded-xl p-3.5 text-[13px] text-white placeholder-kcmuted transition-all">
+                            </div>
+                            <div class="relative">
+                                <label class="block text-[10px] tracking-[0.15em] text-kcmuted uppercase mb-2">Disputed Amount</label>
+                                <span class="absolute left-4 top-[38px] text-kcmuted text-sm">₹</span>
+                                <input id="amount" type="number" placeholder="0.00" class="w-full bg-white/5 border border-kcborder rounded-xl p-3.5 pl-8 text-[13px] text-white placeholder-kcmuted transition-all">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] tracking-[0.15em] text-kcmuted uppercase mb-2">Brief Explanation</label>
+                            <textarea id="details" placeholder="Describe the fraud, missing item, or service failure..." class="w-full bg-white/5 border border-kcborder rounded-xl p-3.5 h-28 text-[13px] text-white placeholder-kcmuted transition-all resize-none"></textarea>
+                        </div>
+
+                        <div class="bg-white/5 border border-kcborder rounded-xl p-4 mt-6 space-y-3">
+                            <label class="flex items-start gap-3 text-[11px] text-kcmuted hover:text-white cursor-pointer transition-colors leading-relaxed">
+                                <input type="checkbox" id="consent" class="mt-1 w-4 h-4 accent-kcaccent bg-transparent border-kcborder rounded cursor-pointer shrink-0">
+                                <span>I verify that the information provided is 100% authentic. The generated email will be sent from my own mail client.</span>
+                            </label>
+                            <label class="flex items-center gap-3 text-[11px] text-kcmuted hover:text-white cursor-pointer transition-colors">
+                                <input type="checkbox" id="terms" class="w-4 h-4 accent-kcaccent bg-transparent border-kcborder rounded cursor-pointer shrink-0">
+                                <span>I accept the <a href="#" class="text-kcaccent border-b border-kcaccent/30 hover:border-kcaccent pb-0.5">Terms of Service</a> & <a href="#" class="text-kcaccent border-b border-kcaccent/30 hover:border-kcaccent pb-0.5">Privacy Policy</a>.</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <button onclick="generate()" id="btn" class="w-full bg-kcaccent text-kcbg font-display font-bold text-sm tracking-[0.08em] uppercase py-4 rounded-xl flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(99,220,190,0.35)] active:translate-y-0 transition-all">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        Generate Legal Notice
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-kcpanel backdrop-blur-xl p-8 md:p-10 flex flex-col relative overflow-hidden">
+                <div class="absolute bottom-6 right-6 font-display text-[80px] font-extrabold text-kcaccent/5 tracking-tighter pointer-events-none leading-none select-none">KC</div>
+                
+                <div class="font-mono text-[10px] text-kcmuted tracking-[0.2em] uppercase mb-8 flex items-center gap-3">
+                    02 — AI Intelligence Draft <span class="h-px bg-kcborder flex-grow"></span>
+                </div>
+
+                <div class="flex justify-between items-center mb-4">
+                    <span id="outputStatus" class="font-mono text-[10px] text-kcaccent tracking-[0.2em] uppercase">Awaiting Input</span>
+                    <span id="charCount" class="font-mono text-[10px] text-kcmuted">0 chars</span>
+                </div>
+
+                <div class="flex-grow bg-black/30 border border-kcborder rounded-xl p-5 overflow-y-auto min-h-[300px] max-h-[450px] relative z-10">
+                    <div id="output" class="font-mono text-[12px] leading-[1.8] text-[#8a9ab0] whitespace-pre-wrap">Awaiting incident details... Once generated, your legally structured grievance notice will appear here — formatted, professional, and ready to dispatch.</div>
+                </div>
+                
+                <div id="actions" class="hidden flex-col gap-3 mt-6 relative z-10">
+                    <button onclick="sendMail()" class="w-full bg-kcaccent/10 border border-kcaccent/30 text-kcaccent hover:bg-kcaccent/20 font-display font-bold text-[13px] tracking-[0.06em] uppercase py-3.5 rounded-xl transition-all flex justify-center items-center gap-2 shadow-[0_4px_20px_rgba(99,220,190,0.05)]">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+                        Open in Mail Client
+                    </button>
+                    <button onclick="copy()" id="copyBtn" class="w-full bg-transparent border border-kcborder text-white hover:border-kcaccent/40 hover:text-kcaccent hover:bg-white/5 font-mono text-[11px] tracking-[0.12em] uppercase py-3 rounded-xl transition-all">
+                        Copy Text to Clipboard
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-10 pt-6 border-t border-kcborder flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+            <div class="font-mono text-[10px] text-kcmuted tracking-[0.05em]">Karma Claims is an independent advocacy AI tool. Not a law firm.<br>Nominative fair use applied for corporate identification.</div>
+            <div class="flex items-center gap-4 font-mono text-[10px] text-kcmuted">
+                <div>Powered by <span class="text-kcaccent">Gemini 2.0 Flash</span></div>
+                <div>© 2026 <span class="text-kcaccent">Karma Claims Ltd.</span></div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let draftData = null;
+
+        async function generate() {
+            const phoneVal = document.getElementById('userPhone').value.trim();
+            if(phoneVal.length !== 10 || isNaN(phoneVal)) {
+                return alert("Security Check: Please enter exactly 10 digits for the mobile number.");
+            }
+
+            if(!document.getElementById('consent').checked || !document.getElementById('terms').checked) {
+                return alert("Legal Requirement: Please check all agreement boxes before generating.");
+            }
+
+            const btn = document.getElementById('btn');
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-kcbg inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> <span class="ml-2">Processing...</span>`;
+            btn.disabled = true;
+
+            const outputEl = document.getElementById('output');
+            outputEl.classList.remove('text-[#8a9ab0]');
+            outputEl.classList.add('text-[#e8edf5]');
+            outputEl.innerHTML = '';
+            
+            document.getElementById('outputStatus').textContent = 'Processing';
+            document.getElementById('charCount').textContent = '...';
+            document.getElementById('actions').classList.add('hidden');
+
+            const payload = {
+                user_phone: "+91 " + phoneVal,
+                user_email: document.getElementById('userEmail').value,
+                company_name: document.getElementById('company').value,
+                order_id: document.getElementById('orderId').value,
+                disputed_amount: document.getElementById('amount').value,
+                complaint_details: document.getElementById('details').value
+            };
+
+            try {
+                const res = await fetch('https://karma-claims-backend.onrender.com', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    draftData = data;
+                    document.getElementById('outputStatus').textContent = 'Draft Ready';
+                    document.getElementById('actions').classList.replace('hidden', 'flex');
+
+                    let i = 0;
+                    const cursor = document.createElement('span');
+                    cursor.className = 'cursor';
+                    outputEl.appendChild(cursor);
+
+                    const typeWriter = setInterval(() => {
+                        cursor.insertAdjacentText('beforebegin', data.body.charAt(i));
+                        i++;
+                        document.getElementById('charCount').textContent = i + ' chars';
+                        if (i > data.body.length - 1) {
+                            clearInterval(typeWriter);
+                            cursor.remove();
+                        }
+                    }, 5);
+
+                } else {
+                    outputEl.textContent = 'Error: ' + (data.detail?.message || "Failed to generate draft.");
+                    document.getElementById('outputStatus').textContent = 'Error';
+                    outputEl.classList.add('text-red-400');
+                }
+            } catch (e) {
+                outputEl.textContent = 'Server connection error. Please ensure your Python server is running.';
+                document.getElementById('outputStatus').textContent = 'Connection Failed';
+                outputEl.classList.add('text-red-400');
+            } finally {
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
+            }
+        }
+
+        function sendMail() {
+            if (!draftData) return;
+            const bcc = "thesoverignsentinel@gmail.com"; // UPDATE THIS WITH YOUR BUSINESS EMAIL
+            const to = draftData.target_email;
+            const sub = encodeURIComponent(draftData.subject);
+            const bod = encodeURIComponent(draftData.body);
+            window.location.href = `mailto:${to}?bcc=${bcc}&subject=${sub}&body=${bod}`;
+            setTimeout(() => {
+                if (confirm("Did your mail app fail to open? Click OK to use Gmail Web.")) {
+                    window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${to}&bcc=${bcc}&su=${sub}&body=${bod}`, '_blank');
+                }
+            }, 1000);
+        }
+
+        function copy() {
+            if (!draftData) return;
+            navigator.clipboard.writeText(draftData.body);
+            const btn = document.getElementById('copyBtn');
+            const originalText = btn.innerText;
+            btn.innerText = "Copied Successfully ✓";
+            btn.classList.add('border-kcaccent', 'text-kcaccent');
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.classList.remove('border-kcaccent', 'text-kcaccent');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
