@@ -3,292 +3,413 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karma Claims | AI Consumer Justice</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        kcbg: '#06080f',
-                        kcpanel: 'rgba(255,255,255,0.028)',
-                        kcaccent: '#63dcbe',
-                        kcborder: 'rgba(255,255,255,0.07)',
-                        kcmuted: '#5a6070',
-                    },
-                    fontFamily: {
-                        display: ['Syne', 'sans-serif'],
-                        mono: ['"DM Mono"', 'monospace'],
-                    }
-                }
-            }
-        }
-    </script>
-
+    <title>Karma Claims | Formal Legal Notice Drafter</title>
     <style>
-        body { background-color: #06080f; color: #e8edf5; overflow-x: hidden; }
-
-        /* Claude's Noise Texture Overlay */
-        body::before {
-            content: ''; position: fixed; inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-            opacity: 0.025; pointer-events: none; z-index: 0;
+        :root {
+            --primary: #1a365d;
+            --secondary: #2563eb;
+            --accent: #dc2626;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-muted: #64748b;
         }
 
-        /* Claude's Ambient Glow Orbs */
-        .orb { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; }
-        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(99,220,190,0.12) 0%, transparent 70%); top: -150px; right: -100px; animation: drift 18s ease-in-out infinite alternate; }
-        .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%); bottom: -100px; left: -100px; animation: drift 22s ease-in-out infinite alternate-reverse; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-        @keyframes drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(30px, -30px) scale(1.1); } }
+        body { background: var(--bg); color: var(--text); padding: 40px 20px; line-height: 1.5; }
 
-        /* Input styling & Custom Scrollbar */
-        input:focus, textarea:focus { border-color: rgba(99,220,190,0.4) !important; box-shadow: 0 0 0 3px rgba(99,220,190,0.07) !important; outline: none; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(99,220,190,0.3); border-radius: 10px; }
+        .wrapper { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; min-height: 90vh; }
+
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 32px; color: var(--primary); margin-bottom: 8px; font-weight: 800; letter-spacing: -0.5px; }
+        .header p { color: var(--text-muted); font-size: 15px; }
+
+        .trust-bar { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 30px; padding: 12px; background: #eff6ff; border-radius: 6px; border: 1px solid #bfdbfe; font-size: 12px; font-weight: 600; color: #1e40af; }
+
+        .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 32px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); margin-bottom: 24px; }
+
+        .field-group { margin-bottom: 20px; }
+        .field-label { display: block; font-size: 13px; font-weight: 600; color: var(--primary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        input, textarea { width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; transition: border-color 0.2s; }
+        input:focus, textarea:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        textarea { resize: vertical; min-height: 100px; }
+
+        .company-error { display: none; font-size: 13px; color: var(--accent); margin-top: 8px; font-weight: 500; }
+
+        .consent-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 24px; padding: 16px; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; }
+        .consent-row input { width: 18px; height: 18px; margin-top: 2px; cursor: pointer; }
+        .consent-text { font-size: 13px; color: var(--text-muted); }
+        .consent-text a { color: var(--secondary); text-decoration: none; font-weight: 500; cursor: pointer; }
+
+        .submit-btn { width: 100%; padding: 16px; background: var(--secondary); color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .submit-btn:hover { background: #1d4ed8; }
+        .submit-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+
+        .loader { display: inline-block; width: 16px; height: 16px; border: 2px solid #ffffff; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 8px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Result Section */
+        .result-section { display: none; margin-top: 32px; }
+        .result-grid { display: grid; grid-template-columns: 1fr 240px; gap: 24px; }
         
-        /* Typewriter Cursor */
-        .cursor { display: inline-block; width: 2px; height: 1em; background: #63dcbe; margin-left: 2px; animation: blink 1s step-end infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
+        @media (max-width: 650px) { .field-row, .result-grid { grid-template-columns: 1fr; } }
+
+        .draft-box { background: #f8fafc; border: 1px solid var(--border); padding: 16px; border-radius: 6px; font-family: monospace; font-size: 13px; line-height: 1.6; color: #334155; height: 300px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 16px; }
+
+        .action-btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 8px; }
+        .action-btn.outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .action-btn.outline:hover { background: #f1f5f9; }
+
+        .fund-card { border: 1px solid var(--border); border-radius: 8px; padding: 24px; text-align: center; background: white; }
+        .fund-card h3 { color: var(--accent); font-size: 16px; margin-bottom: 8px; }
+        .fund-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+        .fund-qr { width: 100%; max-width: 150px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; }
+
+        /* Corporate Footer */
+        .footer { margin-top: auto; padding-top: 40px; text-align: center; font-size: 13px; color: var(--text-muted); }
+        .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 12px; flex-wrap: wrap; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+        .footer-links a:hover { color: var(--secondary); }
+
+        /* Modal Styling */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
+        .modal-content { background: var(--surface); padding: 32px; border-radius: 8px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+        .modal-header h2 { color: var(--primary); font-size: 20px; }
+        .modal-close { cursor: pointer; font-weight: bold; color: var(--text-muted); font-size: 24px; line-height: 1; }
+        .modal-close:hover { color: var(--accent); }
+        .modal-body { font-size: 14px; color: var(--text); line-height: 1.6; }
+        .modal-body strong { color: var(--primary); display: block; margin-top: 12px; }
+
     </style>
 </head>
-<body class="font-display antialiased selection:bg-kcaccent selection:text-kcbg">
+<body>
 
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
+<div class="wrapper">
+    <div class="header">
+        <h1>Karma Claims</h1>
+        <p>Generate formal, legally-routed grievance notices in seconds.</p>
+    </div>
 
-    <div class="relative z-10 max-w-6xl mx-auto p-6 md:p-12 min-h-screen flex flex-col">
-        
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 border-b border-kcborder pb-8 gap-6">
-            <div>
-                <div class="font-mono text-[10px] text-kcaccent tracking-[0.25em] uppercase mb-2 opacity-80">// Consumer Justice Engine v2.0</div>
-                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-none">KARMA<br><span class="text-kcaccent">CLAIMS</span></h1>
-            </div>
-            <div class="flex flex-col items-start md:items-end gap-2">
-                <div class="inline-flex items-center gap-2 font-mono text-[11px] text-kcaccent bg-kcaccent/10 border border-kcaccent/20 px-4 py-1.5 rounded-full">
-                    <span class="w-1.5 h-1.5 bg-kcaccent rounded-full animate-pulse"></span>
-                    System Online
-                </div>
-                <div class="font-mono text-[10px] text-kcmuted">IN — 2026</div>
-            </div>
-        </header>
+    <div class="trust-bar">
+        <span>✓ RBI & TRAI Compliant</span>
+        <span>✓ Zero Data Retention</span>
+        <span>✓ 100% Free Tool</span>
+    </div>
 
-        <div class="grid lg:grid-cols-2 gap-px bg-kcborder rounded-3xl overflow-hidden flex-grow shadow-2xl">
-            
-            <div class="bg-kcpanel backdrop-blur-xl p-8 md:p-10 flex flex-col justify-between">
-                <div>
-                    <div class="font-mono text-[10px] text-kcmuted tracking-[0.2em] uppercase mb-8 flex items-center gap-3">
-                        01 — Incident Details <span class="h-px bg-kcborder flex-grow"></span>
-                    </div>
-
-                    <div class="space-y-5 font-mono">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-[10px] tracking-[0.15em] text-kcmuted uppercase mb-2">Registered Mobile</label>
-                                <div class="flex">
-                                    <span class="flex items-center px-3.5 text-xs text-kcaccent bg-kcaccent/5 border border-r-0 border-kcborder rounded-l-xl">+91</span>
-                                    <input id="userPhone" type="text" maxlength="10" placeholder="10-digit number" class="w-full bg-white/5 border border-kcborder rounded-r-xl p-3.5 text-[13px] text-white placeholder-kcmuted transition-all">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-[10px] tracking-[0.15em] text-kcmuted uppercase mb-2">Email ID</label>
-                                <input id="userEmail" type="email" placeholder="name@example.com" class="w-full bg-white/5 border border-kcborder rounded-xl p-3.5 text-[13px] text-white placeholder-kcmuted transition-all">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] tracking-[0.15em] text-kcmuted uppercase mb-2">Target Company</label>
-                            <input id="company" type="text" placeholder="e.g. ZOMATO, SWIGGY, AMAZON" class="w-full bg-white/5 border border-kcborder rounded-xl p-3.5 text-[13px] text-white placeholder-kcmuted transition-all">
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-[10px] tracking-[0.15em] text-kcmuted uppercase mb-2">Order / Reference ID</label>
-                                <input id="orderId" type="text" placeholder="Required" class="w-full bg-white/5 border border-kcborder rounded-xl p-3.5 text-[13px] text-white placeholder-kcmuted transition-all">
-                            </div>
-                            <div class="relative">
-                                <label class="block text-[10px] tracking-[0.15em] text-kcmuted uppercase mb-2">Disputed Amount</label>
-                                <span class="absolute left-4 top-[38px] text-kcmuted text-sm">₹</span>
-                                <input id="amount" type="number" placeholder="0.00" class="w-full bg-white/5 border border-kcborder rounded-xl p-3.5 pl-8 text-[13px] text-white placeholder-kcmuted transition-all">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] tracking-[0.15em] text-kcmuted uppercase mb-2">Brief Explanation</label>
-                            <textarea id="details" placeholder="Describe the fraud, missing item, or service failure..." class="w-full bg-white/5 border border-kcborder rounded-xl p-3.5 h-28 text-[13px] text-white placeholder-kcmuted transition-all resize-none"></textarea>
-                        </div>
-
-                        <div class="bg-white/5 border border-kcborder rounded-xl p-4 mt-6 space-y-3">
-                            <label class="flex items-start gap-3 text-[11px] text-kcmuted hover:text-white cursor-pointer transition-colors leading-relaxed">
-                                <input type="checkbox" id="consent" class="mt-1 w-4 h-4 accent-kcaccent bg-transparent border-kcborder rounded cursor-pointer shrink-0">
-                                <span>I verify that the information provided is 100% authentic. The generated email will be sent from my own mail client.</span>
-                            </label>
-                            <label class="flex items-center gap-3 text-[11px] text-kcmuted hover:text-white cursor-pointer transition-colors">
-                                <input type="checkbox" id="terms" class="w-4 h-4 accent-kcaccent bg-transparent border-kcborder rounded cursor-pointer shrink-0">
-                                <span>I accept the <a href="#" class="text-kcaccent border-b border-kcaccent/30 hover:border-kcaccent pb-0.5">Terms of Service</a> & <a href="#" class="text-kcaccent border-b border-kcaccent/30 hover:border-kcaccent pb-0.5">Privacy Policy</a>.</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-8">
-                    <button onclick="generate()" id="btn" class="w-full bg-kcaccent text-kcbg font-display font-bold text-sm tracking-[0.08em] uppercase py-4 rounded-xl flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(99,220,190,0.35)] active:translate-y-0 transition-all">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                        Generate Legal Notice
-                    </button>
-                </div>
-            </div>
-
-            <div class="bg-kcpanel backdrop-blur-xl p-8 md:p-10 flex flex-col relative overflow-hidden">
-                <div class="absolute bottom-6 right-6 font-display text-[80px] font-extrabold text-kcaccent/5 tracking-tighter pointer-events-none leading-none select-none">KC</div>
+    <div class="panel">
+        <div class="field-group">
+            <label class="field-label">Target Entity</label>
+            <input list="company_db" id="target_company" placeholder="Start typing company name..." required>
+            <datalist id="company_db">
+                <option value="HDFC Bank (HDFC Bank Limited)">
+                <option value="SBI (State Bank of India)">
+                <option value="ICICI Bank (ICICI Bank Ltd)">
+                <option value="Axis Bank (Axis Bank Ltd)">
+                <option value="Kotak Mahindra Bank">
+                <option value="Punjab National Bank (PNB)">
+                <option value="Bank of Baroda (BOB)">
+                <option value="SBI Card (SBI Cards & Payment Services)">
+                <option value="Google Pay (Google India Digital Services)">
+                <option value="PhonePe (PhonePe Private Limited)">
+                <option value="Paytm (One97 Communications Ltd)">
+                <option value="CRED (Dreamplug Technologies Pvt Ltd)">
+                <option value="Zerodha (Zerodha Broking Ltd)">
+                <option value="Groww (Nextbillion Technology Pvt Ltd)">
+                <option value="Upstox (RKSV Securities India Pvt Ltd)">
                 
-                <div class="font-mono text-[10px] text-kcmuted tracking-[0.2em] uppercase mb-8 flex items-center gap-3">
-                    02 — AI Intelligence Draft <span class="h-px bg-kcborder flex-grow"></span>
-                </div>
-
-                <div class="flex justify-between items-center mb-4">
-                    <span id="outputStatus" class="font-mono text-[10px] text-kcaccent tracking-[0.2em] uppercase">Awaiting Input</span>
-                    <span id="charCount" class="font-mono text-[10px] text-kcmuted">0 chars</span>
-                </div>
-
-                <div class="flex-grow bg-black/30 border border-kcborder rounded-xl p-5 overflow-y-auto min-h-[300px] max-h-[450px] relative z-10">
-                    <div id="output" class="font-mono text-[12px] leading-[1.8] text-[#8a9ab0] whitespace-pre-wrap">Awaiting incident details... Once generated, your legally structured grievance notice will appear here — formatted, professional, and ready to dispatch.</div>
-                </div>
+                <option value="Amazon India (Amazon Seller Services)">
+                <option value="Flipkart (Flipkart Internet Pvt Ltd)">
+                <option value="Myntra (Myntra Designs Pvt Ltd)">
+                <option value="Meesho (Fashnear Technologies Pvt Ltd)">
+                <option value="Nykaa (FSN E-Commerce Ventures Ltd)">
+                <option value="Ajio (Reliance Retail Ltd)">
+                <option value="Tata Cliq (Tata UniStore Limited)">
                 
-                <div id="actions" class="hidden flex-col gap-3 mt-6 relative z-10">
-                    <button onclick="sendMail()" class="w-full bg-kcaccent/10 border border-kcaccent/30 text-kcaccent hover:bg-kcaccent/20 font-display font-bold text-[13px] tracking-[0.06em] uppercase py-3.5 rounded-xl transition-all flex justify-center items-center gap-2 shadow-[0_4px_20px_rgba(99,220,190,0.05)]">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-                        Open in Mail Client
-                    </button>
-                    <button onclick="copy()" id="copyBtn" class="w-full bg-transparent border border-kcborder text-white hover:border-kcaccent/40 hover:text-kcaccent hover:bg-white/5 font-mono text-[11px] tracking-[0.12em] uppercase py-3 rounded-xl transition-all">
-                        Copy Text to Clipboard
-                    </button>
-                </div>
+                <option value="Zomato (Zomato Limited)">
+                <option value="Swiggy (Bundl Technologies Pvt Ltd)">
+                <option value="Blinkit (Grofers India Pvt Ltd)">
+                <option value="Zepto (Kiranakart Technologies Pvt Ltd)">
+                <option value="BigBasket (Innovative Retail Concepts)">
+                
+                <option value="Ola Cabs (ANI Technologies Pvt Ltd)">
+                <option value="Uber India (Uber India Systems Pvt Ltd)">
+                <option value="Rapido (Roppen Transportation Services)">
+                <option value="RedBus (Ibibo Group Pvt Ltd)">
+                <option value="MakeMyTrip (MakeMyTrip India Pvt Ltd)">
+                <option value="Goibibo (Ibibo Group Pvt Ltd)">
+                <option value="Cleartrip (Cleartrip Pvt Ltd)">
+                
+                <option value="Indigo Airlines (InterGlobe Aviation)">
+                <option value="Air India (Air India Limited)">
+                <option value="SpiceJet (SpiceJet Limited)">
+                <option value="Akasa Air (SNV Aviation Pvt Ltd)">
+                
+                <option value="Reliance Jio (Reliance Jio Infocomm)">
+                <option value="Airtel (Bharti Airtel Limited)">
+                <option value="Vi / Vodafone Idea (Vodafone Idea Ltd)">
+                <option value="BSNL (Bharat Sanchar Nigam Limited)">
+                <option value="Tata Play (Tata Play Limited)">
+                <option value="LIC India (Life Insurance Corporation)">
+                <option value="Star Health (Star Health & Allied Insurance)">
+                <option value="HDFC Life (HDFC Life Insurance Co)">
+                <option value="SBI Life (SBI Life Insurance Co)">
+                <option value="Policybazaar (PB Fintech Ltd)">
+                <option value="Acko (Acko General Insurance Ltd)">
+                <option value="Byjus (Think and Learn Pvt Ltd)">
+                <option value="Unacademy (Sorting Hat Technologies)">
+                <option value="Physics Wallah (PhysicsWallah Pvt Ltd)">
+                <option value="UpGrad (UpGrad Education Pvt Ltd)">
+            </datalist>
+            <div class="company-error" id="company_error">⚠ Please select a verified company from the dropdown.</div>
+        </div>
+
+        <div class="field-row">
+            <div class="field-group">
+                <label class="field-label">Order / Transaction ID</label>
+                <input type="text" id="order_id" placeholder="Reference number" required>
+            </div>
+            <div class="field-group">
+                <label class="field-label">Disputed Amount (₹)</label>
+                <input type="number" id="disputed_amount" placeholder="0.00" required>
             </div>
         </div>
 
-        <footer class="mt-10 pt-6 border-t border-kcborder flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-            <div class="font-mono text-[10px] text-kcmuted tracking-[0.05em]">Karma Claims is an independent advocacy AI tool. Not a law firm.<br>Nominative fair use applied for corporate identification.</div>
-            <div class="flex items-center gap-4 font-mono text-[10px] text-kcmuted">
-                <div>Powered by <span class="text-kcaccent">Gemini 2.0 Flash</span></div>
-                <div>© 2026 <span class="text-kcaccent">Karma Claims Ltd.</span></div>
+        <div class="field-group">
+            <label class="field-label">Your Full Name</label>
+            <input type="text" id="user_name" placeholder="E.g. Rahul Sharma" required>
+        </div>
+
+        <div class="field-row">
+            <div class="field-group">
+                <label class="field-label">Your Email</label>
+                <input type="email" id="user_email" placeholder="consumer@domain.com" required>
             </div>
-        </footer>
+            <div class="field-group">
+                <label class="field-label">Your Phone</label>
+                <input type="tel" id="user_phone" placeholder="+91 XXXXX XXXXX" required>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Incident Details</label>
+            <textarea id="complaint_details" maxlength="1000" placeholder="Describe the fraud or dispute in detail. Be specific about dates and amounts..." required></textarea>
+        </div>
+
+        <div class="consent-row">
+            <input type="checkbox" id="legal_consent" required>
+            <div class="consent-text">
+                I agree to the <a href="#" onclick="document.getElementById('terms_modal').style.display='flex'; return false;">Terms of Service</a>. I understand this is an AI drafting tool, not legal counsel, and I am not submitting sensitive passwords or PINs.
+            </div>
+        </div>
+
+        <button class="submit-btn" id="submit_btn" onclick="generateDraft()">
+            <span id="btn_text">Generate Formal Notice</span>
+        </button>
     </div>
 
-    <script>
-        let draftData = null;
+    <div class="result-section" id="result_section">
+        <div class="result-grid">
+            <div class="panel" style="margin-bottom: 0;">
+                <div class="field-group">
+                    <label class="field-label">To: <span id="out_email" style="color: var(--text); font-weight: 400; text-transform: none;"></span></label>
+                    <label class="field-label">Subject: <span id="out_subject" style="color: var(--text); font-weight: 400; text-transform: none;"></span></label>
+                </div>
+                <div class="draft-box" id="out_body"></div>
+                
+                <label class="field-label" style="margin-top: 20px;">Send Notice Via:</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                    <button class="action-btn" id="gmail_btn" style="background-color: #ea4335; margin: 0;">🔴 Gmail</button>
+                    <button class="action-btn" id="outlook_btn" style="background-color: #0078d4; margin: 0;">🔵 Outlook</button>
+                    <button class="action-btn" id="yahoo_btn" style="background-color: #6001d2; margin: 0;">🟣 Yahoo</button>
+                    <button class="action-btn" id="apple_btn" style="background-color: #000000; margin: 0;"> Apple / Default</button>
+                </div>
+                <button class="action-btn outline" onclick="copyDraft()" style="margin: 0;">Copy Draft to Clipboard</button>
+            </div>
 
-        async function generate() {
-            const phoneVal = document.getElementById('userPhone').value.trim();
-            if(phoneVal.length !== 10 || isNaN(phoneVal)) {
-                return alert("Security Check: Please enter exactly 10 digits for the mobile number.");
-            }
+            <div class="fund-card">
+                <h3>Fund the Fight</h3>
+                <p>Karma Claims is a solo movement fighting corporate impunity. Help us keep servers running.</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=ss.aggarwal.17@okaxis&pn=KarmaClaims&cu=INR" alt="UPI QR" class="fund-qr">
+                <label class="field-label" style="text-align: center;">Scan to Fund</label>
+            </div>
+        </div>
+    </div>
 
-            if(!document.getElementById('consent').checked || !document.getElementById('terms').checked) {
-                return alert("Legal Requirement: Please check all agreement boxes before generating.");
-            }
+    <div class="footer">
+        <div class="footer-links">
+            <a href="#" onclick="document.getElementById('contact_modal').style.display='flex'; return false;">Investor Relations</a>
+            <a href="#" onclick="document.getElementById('contact_modal').style.display='flex'; return false;">Contact Us</a>
+            <a href="#" onclick="document.getElementById('terms_modal').style.display='flex'; return false;">Privacy Policy</a>
+            <a href="#" onclick="document.getElementById('terms_modal').style.display='flex'; return false;">Terms of Service</a>
+        </div>
+        <p>© 2026 Karma Claims. All rights reserved.</p>
+    </div>
+</div>
 
-            const btn = document.getElementById('btn');
-            const originalBtnText = btn.innerHTML;
-            btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-kcbg inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> <span class="ml-2">Processing...</span>`;
-            btn.disabled = true;
-
-            const outputEl = document.getElementById('output');
-            outputEl.classList.remove('text-[#8a9ab0]');
-            outputEl.classList.add('text-[#e8edf5]');
-            outputEl.innerHTML = '';
+<div class="modal-overlay" id="terms_modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Terms of Service & Disclaimer</h2>
+            <span class="modal-close" onclick="document.getElementById('terms_modal').style.display='none'">&times;</span>
+        </div>
+        <div class="modal-body">
+            <strong>1. Not Legal Advice</strong>
+            <p>Karma Claims is an AI-powered drafting tool, not a law firm. The notices generated are for your personal use and do not constitute official legal counsel.</p>
             
-            document.getElementById('outputStatus').textContent = 'Processing';
-            document.getElementById('charCount').textContent = '...';
-            document.getElementById('actions').classList.add('hidden');
+            <strong>2. Data Privacy & Zero Retention</strong>
+            <p>We do not store your personal data, transaction IDs, or generated notices on our servers after your session ends. Your data is processed securely and immediately discarded.</p>
+            
+            <strong>3. User Responsibility</strong>
+            <p>You are solely responsible for the accuracy of the claims made and the validity of the evidence provided to the target entity.</p>
+            
+            <button class="action-btn" style="margin-top: 24px;" onclick="document.getElementById('terms_modal').style.display='none'">I Understand & Agree</button>
+        </div>
+    </div>
+</div>
 
-            const payload = {
-                user_phone: "+91 " + phoneVal,
-                user_email: document.getElementById('userEmail').value,
-                company_name: document.getElementById('company').value,
-                order_id: document.getElementById('orderId').value,
-                disputed_amount: document.getElementById('amount').value,
-                complaint_details: document.getElementById('details').value
-            };
+<div class="modal-overlay" id="contact_modal">
+    <div class="modal-content" style="text-align: center;">
+        <div class="modal-header">
+            <h2>Contact Karma Claims</h2>
+            <span class="modal-close" onclick="document.getElementById('contact_modal').style.display='none'">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Karma Claims is a bootstrapped legal-tech initiative dedicated to fighting corporate impunity.</p><br>
+            
+            <p><strong>For Consumer Support:</strong><br>
+            <span style="color: var(--secondary); font-size: 16px; font-weight: 500;">thesoverignsentinel@gmail.com</span></p><br>
+            
+            <p><strong>For Press & Investor Relations:</strong><br>
+            <span style="color: var(--secondary); font-size: 16px; font-weight: 500;">thesoverignsentinel@gmail.com</span></p><br>
+            
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">
+                *(Note: Please do not send sensitive passwords or PINs to these email addresses)*
+            </p>
+            
+            <button class="action-btn" style="margin-top: 24px;" onclick="document.getElementById('contact_modal').style.display='none'">Close Window</button>
+        </div>
+    </div>
+</div>
 
-            try {
-                const res = await fetch('https://karma-claims-backend.onrender.com/generate-draft', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+<script>
+function copyDraft() {
+    const draftText = document.getElementById("out_body").innerText;
+    navigator.clipboard.writeText(draftText).then(() => {
+        alert("Draft successfully copied to your clipboard!");
+    }).catch(err => alert("Failed to copy text."));
+}
 
-                const data = await res.json();
+async function generateDraft() {
+    const userInput = document.getElementById("target_company").value;
+    const datalistOptions = document.getElementById("company_db").options;
+    const consent = document.getElementById("legal_consent").checked;
+    const btn = document.getElementById("submit_btn");
+    const btnText = document.getElementById("btn_text");
 
-                if (res.ok) {
-                    draftData = data;
-                    document.getElementById('outputStatus').textContent = 'Draft Ready';
-                    document.getElementById('actions').classList.replace('hidden', 'flex');
+    let isValid = Array.from(datalistOptions).some(opt => opt.value === userInput);
 
-                    let i = 0;
-                    const cursor = document.createElement('span');
-                    cursor.className = 'cursor';
-                    outputEl.appendChild(cursor);
+    if (!isValid) { document.getElementById("company_error").style.display = "block"; return; }
+    if (!consent) { alert("Please accept the Terms of Service to continue."); return; }
 
-                    const typeWriter = setInterval(() => {
-                        cursor.insertAdjacentText('beforebegin', data.body.charAt(i));
-                        i++;
-                        document.getElementById('charCount').textContent = i + ' chars';
-                        if (i > data.body.length - 1) {
-                            clearInterval(typeWriter);
-                            cursor.remove();
-                        }
-                    }, 5);
+    document.getElementById("company_error").style.display = "none";
+    btn.disabled = true;
+    btnText.innerHTML = '<span class="loader"></span> Compiling Notice...';
 
-                } else {
-                    outputEl.textContent = 'Error: ' + (data.detail?.message || "Failed to generate draft.");
-                    document.getElementById('outputStatus').textContent = 'Error';
-                    outputEl.classList.add('text-red-400');
-                }
-            } catch (e) {
-                outputEl.textContent = 'Server connection error. Please ensure your Python server is running.';
-                document.getElementById('outputStatus').textContent = 'Connection Failed';
-                outputEl.classList.add('text-red-400');
-            } finally {
-                btn.innerHTML = originalBtnText;
-                btn.disabled = false;
+    const payload = {
+        user_name: document.getElementById("user_name").value,
+        company_name: userInput,
+        order_id: document.getElementById("order_id").value,
+        disputed_amount: document.getElementById("disputed_amount").value,
+        user_email: document.getElementById("user_email").value,
+        user_phone: document.getElementById("user_phone").value,
+        complaint_details: document.getElementById("complaint_details").value
+    };
+
+    try {
+        // LOCAL TESTING URL IS SET HERE (Update this before going live)
+        const response = await fetch("https://karma-claims-backend.onrender.com/generate-draft", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById("result_section").style.display = "block";
+            document.getElementById("out_email").innerText = data.target_email;
+            document.getElementById("out_subject").innerText = data.subject;
+            document.getElementById("out_body").innerText = data.body;
+
+            // UPDATED BCC EMAIL
+            const bccEmail = "thesoverignsentinel@gmail.com";
+            
+            const safeBody = encodeURIComponent(data.body);
+            const safeSubject = encodeURIComponent(data.subject);
+            const attachmentWarning = "⚠️ CRITICAL STEP:\n\nYou must MANUALLY attach your screenshots, receipts, and proofs on the next screen before you hit Send.\n\nClick OK to open your email.";
+            
+            if (safeBody.length > 7000) {
+                const heavyNotice = function () {
+                    navigator.clipboard.writeText(data.body).then(() => {
+                        alert("⚠️ This legal notice is highly detailed and exceeds automatic email limits.\n\n✅ It has been securely copied to your clipboard. Please open your mail app and paste it.");
+                    });
+                };
+                
+                document.getElementById("gmail_btn").onclick = heavyNotice;
+                document.getElementById("outlook_btn").onclick = heavyNotice;
+                document.getElementById("yahoo_btn").onclick = heavyNotice;
+                document.getElementById("apple_btn").onclick = heavyNotice;
+                
+            } else {
+                document.getElementById("gmail_btn").onclick = function () {
+                    alert(attachmentWarning);
+                    window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${data.target_email}&bcc=${bccEmail}&su=${safeSubject}&body=${safeBody}`, '_blank');
+                };
+
+                document.getElementById("outlook_btn").onclick = function () {
+                    alert(attachmentWarning);
+                    window.open(`https://outlook.live.com/owa/?path=/mail/action/compose&to=${data.target_email}&subject=${safeSubject}&body=${safeBody}`, '_blank');
+                };
+
+                document.getElementById("yahoo_btn").onclick = function () {
+                    alert(attachmentWarning);
+                    window.open(`https://compose.mail.yahoo.com/?to=${data.target_email}&subject=${safeSubject}&body=${safeBody}`, '_blank');
+                };
+
+                document.getElementById("apple_btn").onclick = function () {
+                    alert(attachmentWarning);
+                    window.location.href = `mailto:${data.target_email}?bcc=${bccEmail}&subject=${safeSubject}&body=${safeBody}`;
+                };
             }
-        }
 
-        function sendMail() {
-            if (!draftData) return;
-            const bcc = "thesoverignsentinel@gmail.com"; // UPDATE THIS WITH YOUR BUSINESS EMAIL
-            const to = draftData.target_email;
-            const sub = encodeURIComponent(draftData.subject);
-            const bod = encodeURIComponent(draftData.body);
-            window.location.href = `mailto:${to}?bcc=${bcc}&subject=${sub}&body=${bod}`;
-            setTimeout(() => {
-                if (confirm("Did your mail app fail to open? Click OK to use Gmail Web.")) {
-                    window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${to}&bcc=${bcc}&su=${sub}&body=${bod}`, '_blank');
-                }
-            }, 1000);
+            document.getElementById("result_section").scrollIntoView({ behavior: "smooth", block: "start" });
+        } else if (response.status === 422) {
+            alert("Security Error: Please ensure all fields are filled out correctly.");
+        } else if (response.status === 429) {
+            alert("Rate limit exceeded. Please wait a minute before generating another notice.");
+        } else {
+            alert("Server error. Please wait 30 seconds and try again.");
         }
+    } catch (err) {
+        alert("Network error. Ensure your local server is running.");
+    } finally {
+        btn.disabled = false;
+        btnText.innerHTML = 'Generate Formal Notice';
+    }
+}
 
-        function copy() {
-            if (!draftData) return;
-            navigator.clipboard.writeText(draftData.body);
-            const btn = document.getElementById('copyBtn');
-            const originalText = btn.innerText;
-            btn.innerText = "Copied Successfully ✓";
-            btn.classList.add('border-kcaccent', 'text-kcaccent');
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.classList.remove('border-kcaccent', 'text-kcaccent');
-            }, 2000);
-        }
-    </script>
+// --- SECURITY BOUNCER: Disable Right-Click and View Source ---
+document.addEventListener('contextmenu', event => event.preventDefault());
+document.onkeydown = function(e) { 
+    if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) { 
+        return false; 
+    } 
+};
+</script>
+
 </body>
-
 </html>
