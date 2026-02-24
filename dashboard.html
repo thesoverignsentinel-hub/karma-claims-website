@@ -4,153 +4,370 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Karma Claims | Active Case Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1a365d; --secondary: #2563eb; --accent: #dc2626; 
-            --success: #16a34a; --bg: #f8fafc; --surface: #ffffff; 
-            --border: #e2e8f0; --text: #0f172a; --text-muted: #64748b;
-            --warning-bg: #fffbeb; --warning-text: #b45309; --warning-border: #fcd34d;
+            --primary: #1a365d; --primary-mid: #1e4080; --secondary: #2563eb; 
+            --accent: #dc2626; --success: #16a34a; --warning: #d97706; 
+            --bg: #f0f4f8; --surface: #ffffff; --border: #e2e8f0; 
+            --text: #0f172a; --text-muted: #64748b;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
-        body { background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
-        .wrapper { max-width: 1000px; margin: 0 auto; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .scoreboard { background: var(--primary); color: white; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .scoreboard h2 { font-size: 32px; font-weight: 800; margin-bottom: 5px; color: #60a5fa; }
-        .scoreboard p { font-size: 15px; opacity: 0.9; }
+        body {
+            background: var(--bg);
+            background-image: radial-gradient(ellipse at 10% 10%, rgba(37,99,235,0.05) 0%, transparent 45%), radial-gradient(ellipse at 90% 85%, rgba(26,54,93,0.07) 0%, transparent 45%);
+            color: var(--text); font-family: 'Inter', -apple-system, sans-serif; min-height: 100vh; padding-bottom: 120px;
+        }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .widget { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .widget h3 { color: var(--primary); font-size: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;}
-        
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-bottom: 10px; }
-        input[type="file"] { border: 1px dashed var(--secondary); background: #eff6ff; cursor: pointer; }
-        
-        button { background: var(--secondary); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; }
-        button:hover { background: #1d4ed8; }
-        button.success-btn { background: var(--success); }
-        button.success-btn:hover { background: #15803d; }
-        button:disabled { opacity: 0.7; cursor: not-allowed; }
-        
-        .alert-box { background: #eff6ff; border-left: 4px solid var(--secondary); padding: 12px; font-size: 13px; margin-top: 10px; border-radius: 0 6px 6px 0; display: none; }
-        .warning-box { background: var(--warning-bg); border-left: 4px solid var(--warning-border); color: var(--warning-text); padding: 12px; font-size: 13px; margin-top: 10px; border-radius: 0 6px 6px 0; display: none; }
-        .result-text { font-size: 13px; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid var(--border); margin-top: 10px; white-space: pre-wrap; display: none; }
+        /* ── NAV ── */
+        .nav { background: var(--primary); height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 16px rgba(26,54,93,0.28); }
+        .nav-left { display: flex; align-items: center; gap: 20px; }
+        .back-nav { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 13.5px; font-weight: 500; transition: color 0.2s; }
+        .back-nav:hover { color: white; }
+        .nav-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.2); }
+        .nav-brand { font-weight: 800; font-size: 17.5px; color: white; letter-spacing: -0.02em; }
+        .nav-brand span { color: #60a5fa; }
+        .nav-status { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.55); }
+        .status-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; animation: pulseDot 2s ease-in-out infinite; }
+        @keyframes pulseDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.75); } }
 
-        .tip-jar { text-align: center; background: #fef2f2; border: 2px dashed #f87171; padding: 20px; border-radius: 8px; margin-top: 20px; display: none; }
-        .tip-jar img { width: 150px; height: 150px; margin-top: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);}
+        /* ── SCOREBOARD ── */
+        .scoreboard { background: var(--primary); background-image: linear-gradient(135deg, #1a365d 0%, #1e4080 60%, #1a3870 100%); padding: 36px 28px 32px; text-align: center; position: relative; overflow: hidden; border-bottom: 1px solid rgba(255,255,255,0.07); }
+        .scoreboard::before { content: ''; position: absolute; top: -80px; left: -80px; width: 240px; height: 240px; background: radial-gradient(circle, rgba(96,165,250,0.1) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        .scoreboard::after { content: ''; position: absolute; bottom: -50px; right: -50px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        .scoreboard-eyebrow { font-size: 10.5px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 10px; position: relative; z-index: 1; }
+        .scoreboard-amount { font-size: clamp(38px, 8vw, 64px); font-weight: 800; color: #60a5fa; letter-spacing: -0.03em; line-height: 1; position: relative; z-index: 1; }
+        .scoreboard-amount .rupee { font-size: 0.55em; vertical-align: top; margin-top: 0.15em; }
+        .scoreboard-pills { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; position: relative; z-index: 1; }
+        .s-pill { background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.14); padding: 5px 14px; border-radius: 100px; font-size: 12.5px; color: rgba(255,255,255,0.8); }
+        .s-pill strong { color: #93c5fd; }
 
-        /* ── TOAST & COPY BUTTON (From Claude) ── */
-        .toast { position: fixed; top: 20px; right: 20px; background: var(--primary); color: white; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999; animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .copy-btn { background: #e2e8f0; color: var(--primary); font-size: 11px; padding: 4px 8px; border-radius: 4px; border: none; width: auto; cursor: pointer; display: inline-block; margin-left: 10px;}
-        .copy-btn:hover { background: #cbd5e1; }
+        /* ── WRAPPER ── */
+        .wrapper { max-width: 1040px; margin: 0 auto; padding: 26px 18px; }
 
-        /* ── CHAT STYLES (Upgraded) ── */
-        #chat-widget { position: fixed; bottom: 20px; right: 20px; width: 320px; background: white; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: none; flex-direction: column; z-index: 2000; overflow: hidden; }
-        #chat-header { background: var(--primary); color: white; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; cursor: pointer; }
-        #chat-body { height: 250px; overflow-y: auto; padding: 15px; font-size: 13px; background: #f8fafc; }
-        #chat-input-area { border-top: 1px solid var(--border); padding: 10px; display: flex; gap: 8px; background: white;}
-        #chat-input-area input { margin: 0; }
-        #chat-input-area button { width: auto; }
-        #chat-toggle { position: fixed; bottom: 20px; right: 20px; background: var(--primary); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-weight: bold; z-index: 1999; font-size: 24px;}
-        .bot-msg { background: white; padding: 8px 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e2e8f0; color: #334155; }
-        .user-msg { background: var(--secondary); color: white; padding: 8px 12px; border-radius: 8px; margin-bottom: 10px; align-self: flex-end; margin-left: 20px; }
-        
-        /* ── TYPING INDICATOR ── */
-        .typing { display: flex; gap: 4px; padding: 10px 12px; background: white; border: 1px solid var(--border); border-radius: 8px; width: fit-content; margin-bottom: 10px;}
-        .dot { width: 6px; height: 6px; background: #94a3b8; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
-        .dot:nth-child(1) { animation-delay: -0.32s; } .dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        /* ── COMPANY SELECTOR ── */
+        .selector-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; margin-bottom: 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03); }
+        .selector-top { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
+        .selector-icon { width: 42px; height: 42px; background: #eff6ff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .selector-label { font-weight: 700; font-size: 14.5px; color: var(--primary); margin-bottom: 3px; }
+        .selector-sub { font-size: 13px; color: var(--text-muted); }
 
-        .back-nav { margin-bottom: 20px; display: inline-block; text-decoration: none; color: var(--secondary); font-weight: 600; font-size: 14px; }
+        .search-wrap { position: relative; }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
+        .company-input { width: 100%; padding: 11px 14px 11px 36px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14.5px; font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); transition: border-color 0.2s, box-shadow 0.2s; }
+        .company-input:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); background: white; }
+
+        /* ── UNVERIFIED WARNING ── */
+        .unverified-banner { display: none; margin-top: 12px; background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #f59e0b; border-radius: 0 8px 8px 0; padding: 12px 14px; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        .ub-title { font-weight: 700; font-size: 13.5px; color: #92400e; margin-bottom: 4px; }
+        .unverified-banner p { font-size: 13px; color: #a16207; margin-bottom: 10px; line-height: 1.5; }
+        .ub-btn { background: #b45309; color: white; border: none; padding: 7px 14px; border-radius: 6px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 12.5px; cursor: pointer; transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px; width: auto; }
+        .ub-btn:hover { background: #92400e; }
+
+        /* ── GRID ── */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 20px; }
+
+        /* ── WIDGET ── */
+        .widget { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03); transition: box-shadow 0.2s; }
+        .widget:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.06); }
+        .widget-header { display: flex; align-items: center; gap: 10px; padding-bottom: 14px; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .w-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+        .w-icon.blue { background: #eff6ff; } .w-icon.red { background: #fef2f2; } .w-icon.green { background: #f0fdf4; } .w-icon.slate { background: #f1f5f9; }
+        .w-title { font-weight: 700; font-size: 14.5px; color: var(--primary); }
+        .w-badge { margin-left: auto; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; }
+        .badge-blue { background: #eff6ff; color: var(--secondary); } .badge-red { background: #fef2f2; color: var(--accent); } .badge-green { background: #f0fdf4; color: var(--success); } .badge-amber { background: #fffbeb; color: #b45309; }
+
+        /* ── TIMELINE ── */
+        .timeline-empty { text-align: center; padding: 20px 0; color: var(--text-muted); font-size: 13.5px; }
+        .timeline-empty .ei { font-size: 26px; margin-bottom: 6px; }
+        .deadline-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .deadline-row:last-of-type { border-bottom: none; }
+        .ddot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+        .ddot.blue { background: var(--secondary); } .ddot.orange { background: #f97316; }
+        .d-label { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 2px; }
+        .d-date { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 13.5px; font-weight: 600; color: var(--text); }
+        .deadline-warning { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 12px; font-size: 12.5px; color: #92400e; margin-top: 12px; display: flex; align-items: flex-start; gap: 7px; line-height: 1.5; }
+
+        .matrix-divider { font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin: 16px 0 10px; }
+        .matrix-step { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 7px; font-size: 13px; color: var(--text); background: var(--bg); animation: fadeUp 0.35s ease both; }
+        .matrix-step:nth-child(2) { animation-delay: 0.06s; } .matrix-step:nth-child(3) { animation-delay: 0.12s; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .m-num { width: 22px; height: 22px; background: var(--primary); color: white; border-radius: 50%; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .matrix-step a { color: var(--secondary); font-weight: 500; text-decoration: none; }
+        .matrix-step a:hover { text-decoration: underline; }
+        .copy-pill { margin-left: auto; background: none; border: 1px solid var(--border); color: var(--text-muted); font-size: 11.5px; font-weight: 500; padding: 2px 8px; border-radius: 4px; cursor: pointer; transition: all 0.15s; width: auto; white-space: nowrap; font-family: 'Inter', sans-serif; }
+        .copy-pill:hover { background: var(--border); color: var(--text); }
+
+        /* ── INPUTS ── */
+        .styled-textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13.5px; font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); resize: vertical; min-height: 90px; transition: border-color 0.2s, box-shadow 0.2s; line-height: 1.5; }
+        .styled-textarea:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); background: white; }
+        .styled-input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14.5px; font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); transition: border-color 0.2s, box-shadow 0.2s; }
+        .styled-input:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); background: white;}
+
+        /* ── BUTTONS ── */
+        .btn { width: 100%; margin-top: 10px; padding: 11px 16px; border: none; border-radius: 8px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 13.5px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: var(--secondary); color: white; }
+        .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(37,99,235,0.3); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #15803d; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(22,163,74,0.3); }
+        .btn:active { transform: translateY(0) !important; box-shadow: none !important; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+        .btn-spinner { display: none; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn.loading .btn-spinner { display: block; }
+        .btn.loading .btn-label { opacity: 0.75; }
+
+        /* ── RESULT BOXES ── */
+        .result-box { display: none; margin-top: 12px; padding: 12px 14px; border-radius: 8px; font-size: 13.5px; line-height: 1.65; animation: fadeUp 0.3s ease; }
+        .rb-info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+        .rb-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; font-weight: 600; text-align: center; font-size: 14.5px; }
+
+        .bs-tag { display: inline-block; font-weight: 700; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; margin-bottom: 8px; }
+        .tag-stalling { background: #fef3c7; color: #92400e; }
+        .tag-illegal { background: #fee2e2; color: #991b1b; }
+        .tag-valid { background: #d1fae5; color: #065f46; }
+
+        /* ── COMING SOON ── */
+        .coming-soon-block { background: #f8fafc; border: 1.5px dashed var(--border); border-radius: 10px; padding: 28px 20px; text-align: center; }
+        .cs-icon { font-size: 28px; margin-bottom: 10px; }
+        .cs-title { font-weight: 700; font-size: 15.5px; color: var(--primary); margin-bottom: 6px; }
+        .cs-sub { font-size: 13px; color: var(--text-muted); line-height: 1.6; max-width: 280px; margin: 0 auto; }
+        .cs-eta { display: inline-block; margin-top: 12px; background: #f1f5f9; border: 1px solid var(--border); padding: 4px 12px; border-radius: 100px; font-size: 11.5px; font-weight: 600; color: var(--text-muted); }
+
+        /* ── WIN WIDGET ── */
+        .win-inputs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 2px; }
+        .amount-wrap { position: relative; }
+        .amount-prefix { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: ui-monospace, SFMono-Regular, monospace; font-size: 14.5px; color: var(--text-muted); pointer-events: none; }
+        .amount-wrap .styled-input { padding-left: 26px; font-family: ui-monospace, SFMono-Regular, monospace;}
+
+        .file-drop { border: 1.5px dashed #93c5fd; background: #eff6ff; border-radius: 8px; padding: 14px; text-align: center; cursor: pointer; transition: background 0.2s, border-color 0.2s; position: relative; }
+        .file-drop:hover { background: #dbeafe; border-color: var(--secondary); }
+        .file-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+        .file-drop-icon { font-size: 18px; margin-bottom: 3px; }
+        .file-drop-text { font-size: 12.5px; color: var(--secondary); font-weight: 600; }
+        .file-drop-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+        .file-name { font-size: 12.5px; color: var(--success); font-weight: 500; margin-top: 4px; display: none; }
+
+        /* ── TIP JAR ── */
+        .tip-jar { display: none; margin-top: 16px; background: #fef2f2; border: 2px dashed #fca5a5; border-radius: 12px; padding: 20px; text-align: center; animation: fadeUp 0.4s ease; }
+        .tip-title { font-weight: 800; font-size: 15.5px; color: #b91c1c; margin-bottom: 6px; }
+        .tip-sub { font-size: 13px; color: #64748b; line-height: 1.55; margin-bottom: 14px; }
+        .tip-jar img { width: 148px; height: 148px; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); display: block; margin: 0 auto 10px; }
+        .tip-upi { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 13.5px; font-weight: 500; color: var(--primary); background: white; border: 1px solid var(--border); padding: 6px 14px; border-radius: 6px; display: inline-block; }
+
+        /* ── CHAT ── */
+        #chat-toggle { position: fixed; bottom: 24px; right: 24px; background: var(--primary); color: white; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 8px 24px rgba(26,54,93,0.4); font-size: 22px; z-index: 1999; border: none; transition: transform 0.2s, box-shadow 0.2s; }
+        #chat-toggle:hover { transform: scale(1.08); box-shadow: 0 12px 32px rgba(26,54,93,0.5); }
+        #chat-widget { position: fixed; bottom: 92px; right: 24px; width: 336px; background: white; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 20px 48px rgba(0,0,0,0.13); display: none; flex-direction: column; z-index: 2000; overflow: hidden; animation: chatPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes chatPop { from { opacity: 0; transform: scale(0.9) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        #chat-header { background: var(--primary); padding: 13px 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .ch-avatar { width: 30px; height: 30px; background: rgba(96,165,250,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .ch-name { font-weight: 700; font-size: 13.5px; color: white; }
+        .ch-sub { font-size: 10.5px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 4px; }
+        .ch-sub-dot { width: 5px; height: 5px; background: #22c55e; border-radius: 50%; }
+        .ch-close { margin-left: auto; color: rgba(255,255,255,0.5); font-size: 18px; line-height: 1; }
+        #chat-body { height: 255px; overflow-y: auto; padding: 12px; background: #f8fafc; display: flex; flex-direction: column; gap: 8px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+        .bot-msg, .user-msg { padding: 9px 12px; border-radius: 10px; max-width: 88%; font-size: 13.5px; line-height: 1.5; animation: fadeUp 0.2s ease; }
+        .bot-msg { background: white; border: 1px solid var(--border); color: #334155; align-self: flex-start; border-bottom-left-radius: 3px; }
+        .user-msg { background: var(--secondary); color: white; align-self: flex-end; border-bottom-right-radius: 3px; }
+
+        .typing-indicator { display: flex; gap: 4px; padding: 10px 13px; background: white; border: 1px solid var(--border); border-radius: 10px; border-bottom-left-radius: 3px; width: fit-content; align-self: flex-start; }
+        .t-dot { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: typeBounce 1.2s ease-in-out infinite; }
+        .t-dot:nth-child(2) { animation-delay: 0.2s; } .t-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typeBounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+
+        #chat-input-area { border-top: 1px solid var(--border); padding: 10px 12px; display: flex; gap: 8px; background: white; }
+        #chat-input { flex: 1; padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13.5px; font-family: 'Inter', sans-serif; transition: border-color 0.2s; }
+        #chat-input:focus { outline: none; border-color: var(--secondary); }
+        #chat-send { background: var(--secondary); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 13.5px; cursor: pointer; transition: background 0.2s; width: auto; }
+        #chat-send:hover { background: #1d4ed8; }
+
+        /* ── TOAST ── */
+        .toast { position: fixed; top: 72px; right: 20px; background: var(--primary); color: white; padding: 11px 16px; border-radius: 10px; font-weight: 600; font-size: 13.5px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); z-index: 9999; display: flex; align-items: center; gap: 8px; animation: toastIn 0.3s ease; }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9998; }
+
+        @media (max-width: 640px) { .nav { padding: 0 16px; } .wrapper { padding: 14px 12px; } #chat-widget { width: calc(100vw - 28px); right: 14px; } }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <a href="index.html" class="back-nav">← Back to Generator</a>
-
-    <div class="scoreboard">
-        <h2>₹<span id="total_recovered">0</span></h2>
-        <p>Total Recovered | <span id="cases_won">0</span> Cases Won | <span id="active_users">0</span> Active Users Today</p>
+<nav class="nav">
+    <div class="nav-left">
+        <a href="index.html" class="back-nav">← Generator</a>
+        <div class="nav-divider"></div>
+        <div class="nav-brand">Karma<span>Claims</span></div>
     </div>
-
-    <div class="widget" style="margin-bottom: 20px;">
-        <h3>Select Your Active Case</h3>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Search our verified database or type any company name.</p>
-        
-        <input list="company_list" id="case_company" placeholder="Start typing (e.g., Zomato)..." onchange="loadTimelineAndMatrix()">
-        <datalist id="company_list">
-            <option value="Amazon India (Amazon Seller Services Pvt Ltd)"><option value="Flipkart (Flipkart Internet Pvt Ltd)"><option value="Myntra (Myntra Designs Pvt Ltd)"><option value="Meesho (Fashnear Technologies Pvt Ltd)"><option value="Nykaa (FSN E-Commerce Ventures)"><option value="Ajio (Reliance Retail Ltd)"><option value="Tata CLiQ (Tata UniStore Ltd)"><option value="Snapdeal (Snapdeal Pvt Ltd)"><option value="Swiggy (Bundl Technologies Pvt Ltd)"><option value="Zomato (Zomato Ltd)"><option value="Blinkit (Blink Commerce Pvt Ltd)"><option value="Zepto (Kiranakart Technologies Pvt Ltd)"><option value="BigBasket (Supermarket Grocery Supplies)"><option value="JioMart (Reliance Retail Ltd)"><option value="Licious (Delightful Gourmet Pvt Ltd)">
-            <option value="Google Pay (Google India Digital Services)"><option value="PhonePe (PhonePe Pvt Ltd)"><option value="Paytm (One97 Communications Ltd)"><option value="CRED (Dreamplug Technologies Pvt Ltd)"><option value="BharatPe (Resilient Innovations Pvt Ltd)"><option value="MobiKwik (One MobiKwik Systems Ltd)"><option value="Freecharge (Freecharge Payment Technologies)"><option value="Amazon Pay (Amazon Pay India Pvt Ltd)"><option value="Slice (Garagepreneurs Internet Pvt Ltd)"><option value="Jupiter (Amica Financial Technologies)">
-            <option value="HDFC Bank (HDFC Bank Limited)"><option value="SBI (State Bank of India)"><option value="ICICI Bank (ICICI Bank Limited)"><option value="Axis Bank (Axis Bank Limited)"><option value="Kotak Mahindra Bank (Kotak Mahindra Bank Ltd)"><option value="Punjab National Bank (PNB)"><option value="Bank of Baroda (BoB)"><option value="IndusInd Bank (IndusInd Bank Limited)"><option value="IDFC First Bank (IDFC FIRST Bank Ltd)"><option value="Yes Bank (YES BANK Limited)">
-            <option value="Ola Cabs (ANI Technologies Pvt Ltd)"><option value="Uber India (Uber India Systems Pvt Ltd)"><option value="Rapido (Roppen Transportation Services)"><option value="MakeMyTrip (MakeMyTrip India Pvt Ltd)"><option value="Goibibo (Ibibo Group Pvt Ltd)"><option value="EaseMyTrip (Easy Trip Planners Ltd)"><option value="Yatra (Yatra Online Ltd)"><option value="Cleartrip (Cleartrip Pvt Ltd)"><option value="RedBus (Ibibo Group Pvt Ltd)"><option value="IRCTC (Indian Railway Catering and Tourism Corp)">
-            <option value="Reliance Jio (Reliance Jio Infocomm Ltd)"><option value="Bharti Airtel (Bharti Airtel Ltd)"><option value="Vodafone Idea (Vi)"><option value="BSNL (Bharat Sanchar Nigam Limited)"><option value="ACT Fibernet (Atria Convergence Technologies)"><option value="Hathway (Hathway Cable & Datacom Ltd)"><option value="Excitel (Excitel Broadband Pvt Ltd)">
-            <option value="Byju's (Think & Learn Pvt Ltd)"><option value="Unacademy (Sorting Hat Technologies)"><option value="PhysicsWallah (PhysicsWallah Pvt Ltd)"><option value="Vedantu (Vedantu Innovations Pvt Ltd)"><option value="UpGrad (UpGrad Education Pvt Ltd)"><option value="Simplilearn (Simplilearn Solutions Pvt Ltd)"><option value="Cuemath (CueLearn Pvt Ltd)">
-            <option value="IndiGo (InterGlobe Aviation Ltd)"><option value="Air India (Air India Ltd)"><option value="SpiceJet (SpiceJet Ltd)"><option value="Akasa Air (SNV Aviation Pvt Ltd)"><option value="Air India Express (Air India Express Ltd)">
-            <option value="Samsung India (Samsung India Electronics)"><option value="Apple India (Apple India Pvt Ltd)"><option value="Xiaomi India (Xiaomi Technology India)"><option value="OnePlus India (OPlus Mobitech India)"><option value="Dell India (Dell International Services)"><option value="HP India (HP India Sales Pvt Ltd)"><option value="Lenovo India (Lenovo India Pvt Ltd)"><option value="LG India (LG Electronics India Pvt Ltd)"><option value="Sony India (Sony India Pvt Ltd)"><option value="boAt Lifestyle (Imagine Marketing Ltd)"><option value="Urban Company (UrbanClap Technologies)">
-        </datalist>
-
-        <div id="unverified_warning" class="warning-box">
-            <strong>⚠️ Unverified Company:</strong> This company is not in our Top 75 Database. <br><br>
-            <button onclick="requestVerification()" style="background: var(--warning-text); color: white; width: auto; font-size: 12px; padding: 6px 12px; margin-top: 5px;">Request Verification (24-Hour SLA)</button>
-        </div>
+    <div class="nav-status">
+        <div class="status-dot"></div>
+        v4.1 Online
     </div>
+</nav>
 
-    <div class="grid">
-        <div class="widget">
-            <h3>⏳ Escalation Timeline & Matrix</h3>
-            <div id="timeline_alert" class="alert-box">Select or type a company above to calculate your legal deadlines.</div>
-            <p style="font-size: 13px; margin-top: 15px; color: var(--text-muted);"><strong>Attack Vectors:</strong></p>
-            <div id="matrix_alert" class="alert-box" style="background: #fef2f2; border-left-color: var(--accent);"></div>
-        </div>
-
-        <div class="widget">
-            <h3>🕵️ Corporate BS Detector</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Paste their confusing reply here. AI will decode their stalling tactics.</p>
-            <textarea id="bs_input" rows="4" placeholder="e.g., 'Please provide a Level 2 authorization ID...'"></textarea>
-            <button onclick="detectBS()" id="bs_btn">Analyze Email</button>
-            <div id="bs_result" class="result-text"></div>
-        </div>
+<div class="scoreboard">
+    <div class="scoreboard-eyebrow">Karma Community — Total Recovered</div>
+    <div class="scoreboard-amount">
+        <span class="rupee">₹</span><span id="total_recovered">—</span>
     </div>
-
-    <div class="grid">
-        <div class="widget">
-            <h3>⚖️ Gov e-Daakhil Integration</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Auto-generate your official Consumer Court formatting.</p>
-            <div style="background: #f1f5f9; border: 1px dashed var(--border); padding: 20px; text-align: center; border-radius: 8px;">
-                <h4 style="color: var(--primary); margin-bottom: 5px;">🚀 Coming Soon</h4>
-                <p style="font-size: 13px; color: var(--text-muted);">We are currently integrating directly with the Gov e-Daakhil portal to auto-generate your legal PDFs. This feature unlocks next month.</p>
-            </div>
-        </div>
-
-        <div class="widget">
-            <h3>🏆 Case Closed?</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Did our notice force them to refund you? Attach proof so we can shout you out!</p>
-            <input type="number" id="win_amount" placeholder="Amount Recovered (₹)">
-            <input type="file" id="win_screenshot" accept="image/png, image/jpeg" title="Upload Proof (Optional)">
-            <button class="success-btn" onclick="reportWin()" id="win_btn">I Got My Refund!</button>
-            <div id="win_result" class="alert-box" style="background: #f0fdf4; border-color: var(--success); font-weight: bold; font-size: 14px; text-align: center;"></div>
-
-            <div id="tip_jar" class="tip-jar">
-                <h4 style="color: #b91c1c; font-size: 16px;">☕ Support Karma Claims</h4>
-                <p style="font-size: 13px; color: #475569; margin-top: 5px;">Built by a solo founder. If we helped you get your money back, consider buying us a coffee via UPI!</p>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi%3A%2F%2Fpay%3Fpa%3Dss.aggarwal.17%40okaxis%26pn%3DKarma%2520Claims" alt="UPI QR Code">
-                <p style="font-size: 12px; margin-top: 5px; font-weight: bold;">ss.aggarwal.17@okaxis</p>
-            </div>
-        </div>
+    <div class="scoreboard-pills">
+        <div class="s-pill"><strong id="cases_won">—</strong> Cases Won</div>
+        <div class="s-pill"><strong id="active_users">—</strong> Active Today</div>
     </div>
 </div>
 
-<div id="chat-toggle" onclick="toggleChat()">💬</div>
+<div class="wrapper">
+
+    <div class="selector-card">
+        <div class="selector-top">
+            <div class="selector-icon">⚖️</div>
+            <div>
+                <div class="selector-label">Select Your Active Case</div>
+                <div class="selector-sub">Search our verified database or type any company name to proceed</div>
+            </div>
+        </div>
+        <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input
+                list="company_list"
+                id="case_company"
+                class="company-input"
+                placeholder="Start typing — e.g. Zomato, PhonePe, HDFC Bank..."
+                oninput="onCompanyInput()"
+                onchange="loadTimelineAndMatrix()"
+                autocomplete="off"
+            >
+            <datalist id="company_list">
+                <option value="Amazon India (Amazon Seller Services Pvt Ltd)"><option value="Flipkart (Flipkart Internet Pvt Ltd)"><option value="Myntra (Myntra Designs Pvt Ltd)"><option value="Meesho (Fashnear Technologies Pvt Ltd)"><option value="Swiggy (Bundl Technologies Pvt Ltd)"><option value="Zomato (Zomato Ltd)"><option value="Blinkit (Blink Commerce Pvt Ltd)"><option value="Zepto (Kiranakart Technologies Pvt Ltd)"><option value="Nykaa (FSN E-Commerce Ventures)">
+                <option value="Google Pay (Google India Digital Services)"><option value="PhonePe (PhonePe Pvt Ltd)"><option value="Paytm (One97 Communications Ltd)"><option value="CRED (Dreamplug Technologies Pvt Ltd)"><option value="BharatPe (Resilient Innovations Pvt Ltd)"><option value="HDFC Bank (HDFC Bank Limited)"><option value="SBI (State Bank of India)"><option value="ICICI Bank (ICICI Bank Limited)"><option value="Axis Bank (Axis Bank Limited)">
+                <option value="Ola Cabs (ANI Technologies Pvt Ltd)"><option value="Uber India (Uber India Systems Pvt Ltd)"><option value="Rapido (Roppen Transportation Services)"><option value="MakeMyTrip (MakeMyTrip India Pvt Ltd)">
+                <option value="Reliance Jio (Reliance Jio Infocomm Ltd)"><option value="Bharti Airtel (Bharti Airtel Ltd)"><option value="Vodafone Idea (Vi)">
+                <option value="Byju's (Think & Learn Pvt Ltd)"><option value="Unacademy (Sorting Hat Technologies)"><option value="PhysicsWallah">
+            </datalist>
+        </div>
+
+        <div class="unverified-banner" id="unverified_banner">
+            <div class="ub-title">⚠️ Unverified Company</div>
+            <p>This company isn't in our verified database yet. We'll apply generic CCPA timelines — you can still proceed, or request fast-track verification below.</p>
+            <button class="ub-btn" onclick="requestVerification()">
+                📧 Request Verification (24hr SLA)
+            </button>
+        </div>
+    </div>
+
+    <div class="grid-2">
+
+        <div class="widget">
+            <div class="widget-header">
+                <div class="w-icon blue">⏳</div>
+                <div class="w-title">Timeline & Escalation Matrix</div>
+                <span class="w-badge badge-blue" id="reg_badge" style="display:none">RBI</span>
+            </div>
+            <div id="timeline_content">
+                <div class="timeline-empty">
+                    <div class="ei">📋</div>
+                    Select a company above to calculate your legal deadlines
+                </div>
+            </div>
+            <div id="matrix_section" style="display:none">
+                <div class="matrix-divider">⚡ Attack Vectors</div>
+                <div id="matrix_steps"></div>
+            </div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-header">
+                <div class="w-icon red">🕵️</div>
+                <div class="w-title">Corporate BS Detector</div>
+                <span class="w-badge badge-red">AI</span>
+            </div>
+            <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:10px;">Paste their confusing reply. AI decodes stalling tactics instantly.</p>
+            <textarea class="styled-textarea" id="bs_input" placeholder="e.g., 'Please provide a Level 2 authorization ID to proceed with your refund request...'"></textarea>
+            <button class="btn btn-primary" id="bs_btn" onclick="detectBS()">
+                <span class="btn-spinner"></span>
+                <span class="btn-label">🔍 Analyze Email</span>
+            </button>
+            <div class="result-box rb-info" id="bs_result"></div>
+        </div>
+
+    </div>
+
+    <div class="grid-2">
+
+        <div class="widget">
+            <div class="widget-header">
+                <div class="w-icon slate">⚖️</div>
+                <div class="w-title">Gov e-Daakhil Integration</div>
+                <span class="w-badge badge-amber">Soon</span>
+            </div>
+            <div class="coming-soon-block">
+                <div class="cs-icon">🚀</div>
+                <div class="cs-title">Direct Portal Integration</div>
+                <p class="cs-sub">We're building a direct bridge to the Government e-Daakhil portal — auto-generate legal PDFs and pre-fill your complaint with zero manual work.</p>
+                <div class="cs-eta">🗓 Unlocks Next Month</div>
+            </div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-header">
+                <div class="w-icon green">🏆</div>
+                <div class="w-title">Case Closed — Log Your Win</div>
+                <span class="w-badge badge-green">Victory</span>
+            </div>
+            <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:12px;">Did our notice force a refund? Log your win and update the community scoreboard!</p>
+
+            <div class="win-inputs">
+                <div class="amount-wrap">
+                    <span class="amount-prefix">₹</span>
+                    <input type="number" class="styled-input" id="win_amount" placeholder="Amount Recovered">
+                </div>
+                <div class="file-drop">
+                    <input type="file" id="win_screenshot" accept="image/png,image/jpeg" onchange="onFileSelected(this)">
+                    <div class="file-drop-icon">📎</div>
+                    <div class="file-drop-text">Attach Proof (Optional)</div>
+                    <div class="file-drop-sub">PNG or JPG screenshot of your refund</div>
+                    <div class="file-name" id="file_name_display"></div>
+                </div>
+            </div>
+
+            <button class="btn btn-success" id="win_btn" onclick="reportWin()">
+                <span class="btn-spinner"></span>
+                <span class="btn-label">🎉 I Got My Refund!</span>
+            </button>
+
+            <div class="result-box rb-success" id="win_result"></div>
+
+            <div class="tip-jar" id="tip_jar">
+                <div class="tip-title">☕ Support Karma Claims</div>
+                <p class="tip-sub">Built by a solo founder. If we helped you recover your money, consider buying us a coffee via UPI!</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi%3A%2F%2Fpay%3Fpa%3Dss.aggarwal.17%40okaxis%26pn%3DKarma%2520Claims" alt="UPI QR Code">
+                <div class="tip-upi">ss.aggarwal.17@okaxis</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<button id="chat-toggle" onclick="toggleChat()" title="Karma AI Strategist">💬</button>
+
 <div id="chat-widget">
-    <div id="chat-header" onclick="toggleChat()"><span>Karma AI Strategist</span><span>&times;</span></div>
-    <div id="chat-body" id="chat_messages"><div class="bot-msg">Hi! I'm your AI legal strategist. What hurdle is the company throwing at you today?</div></div>
+    <div id="chat-header" onclick="toggleChat()">
+        <div class="ch-avatar">⚖️</div>
+        <div>
+            <div class="ch-name">Karma AI Strategist</div>
+            <div class="ch-sub"><span class="ch-sub-dot"></span> Online — Ready to fight</div>
+        </div>
+        <span class="ch-close">×</span>
+    </div>
+    <div id="chat-body">
+        <div class="bot-msg">Hi! I'm your legal strategist. What hurdle is the company throwing at you today?</div>
+    </div>
     <div id="chat-input-area">
         <input type="text" id="chat-input" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter') sendToChat()">
-        <button onclick="sendToChat()">Send</button>
+        <button id="chat-send" onclick="sendToChat()">↑</button>
     </div>
 </div>
 
@@ -159,186 +376,278 @@
 <script>
     const API_BASE = "https://karma-claims-backend.onrender.com";
 
-    // UX: Toast Notification
-    function showToast(msg) {
+    // ── UTILS ──
+    function toast(msg, icon = '✓') {
         const t = document.createElement('div');
-        t.className = 'toast'; t.innerText = `✓ ${msg}`;
+        t.className = 'toast'; t.innerHTML = `<span>${icon}</span> ${msg}`;
         document.body.appendChild(t);
         setTimeout(() => t.remove(), 3000);
     }
 
-    // UX: Copy to Clipboard
-    function copyText(text) {
-        navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
+    function copyText(text, label = 'Copied!') {
+        navigator.clipboard.writeText(text).then(() => toast(label, '📋'));
     }
 
-    // UX: Animated Numbers
-    function animateNum(id, to, duration = 1500) {
+    function setLoading(id, on) {
         const el = document.getElementById(id);
-        const start = performance.now();
-        function update(now) {
-            const progress = Math.min((now - start) / duration, 1);
-            const easeOut = 1 - Math.pow(1 - progress, 3);
-            el.innerText = Math.floor(to * easeOut).toLocaleString('en-IN');
-            if (progress < 1) requestAnimationFrame(update);
-        }
-        requestAnimationFrame(update);
+        if (!el) return;
+        el.disabled = on;
+        el.classList.toggle('loading', on);
     }
 
-    // UX: Confetti Cannon
+    function showResult(id, html, cls = 'rb-info') {
+        const el = document.getElementById(id);
+        el.className = `result-box ${cls}`;
+        el.innerHTML = html;
+        el.style.display = 'block';
+    }
+
+    function animateNum(id, to, ms = 1600) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const start = performance.now();
+        (function tick(now) {
+            const p = Math.min((now - start) / ms, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.innerText = Math.round(to * eased).toLocaleString('en-IN');
+            if (p < 1) requestAnimationFrame(tick);
+        })(start);
+    }
+
+    // ── DASHBOARD LOAD ──
+    async function loadDashboard() {
+        try {
+            const res = await fetch(`${API_BASE}/api/dashboard`);
+            if (!res.ok) return;
+            const d = await res.json();
+            animateNum('total_recovered', d.total_recovered, 1800);
+            animateNum('cases_won', d.cases_won, 1400);
+            animateNum('active_users', d.active_users, 1600);
+        } catch (e) { console.error('Scoreboard offline'); }
+    }
+
+    // ── COMPANY INPUT ──
+    function onCompanyInput() {
+        document.getElementById('unverified_banner').style.display = 'none';
+    }
+
+    // ── TIMELINE + MATRIX ──
+    async function loadTimelineAndMatrix() {
+        const company = document.getElementById('case_company').value.trim();
+        if (!company) return;
+
+        const tc = document.getElementById('timeline_content');
+        const ms = document.getElementById('matrix_section');
+        const mSteps = document.getElementById('matrix_steps');
+        const badge = document.getElementById('reg_badge');
+        const banner = document.getElementById('unverified_banner');
+
+        tc.innerHTML = `<div class="timeline-empty"><div class="ei">⏳</div>Loading your deadlines...</div>`;
+        ms.style.display = 'none';
+
+        try {
+            const [resT, resM] = await Promise.all([
+                fetch(`${API_BASE}/api/timeline/${encodeURIComponent(company)}`),
+                fetch(`${API_BASE}/api/matrix/${encodeURIComponent(company)}`)
+            ]);
+
+            if (resT.ok) {
+                const d = await resT.json();
+                const isRBI = !!d.ombudsman_escalation_date;
+                const escalLabel = isRBI ? 'RBI Ombudsman Date' : 'Consumer Court Date';
+                const escalDate = d.ombudsman_escalation_date || d.consumer_court_date;
+
+                badge.innerText = isRBI ? 'RBI' : 'CCPA';
+                badge.style.display = 'inline-block';
+                banner.style.display = d.unverified ? 'block' : 'none';
+
+                tc.innerHTML = `
+                    <div class="deadline-row">
+                        <div class="ddot blue"></div>
+                        <div>
+                            <div class="d-label">Level 1 Response Deadline</div>
+                            <div class="d-date">${d.level_1_deadline}</div>
+                        </div>
+                    </div>
+                    <div class="deadline-row">
+                        <div class="ddot orange"></div>
+                        <div>
+                            <div class="d-label">${escalLabel}</div>
+                            <div class="d-date">${escalDate}</div>
+                        </div>
+                    </div>
+                    <div class="deadline-warning">⚠️ ${d.warning}</div>
+                `;
+            }
+
+            if (resM.ok) {
+                const dm = await resM.json();
+                ms.style.display = 'block';
+                const isURL = dm.step_3_portal && dm.step_3_portal.startsWith('http');
+                const email = dm.step_1_email;
+                const hasEmail = email && email.includes('@');
+                mSteps.innerHTML = `
+                    <div class="matrix-step">
+                        <div class="m-num">1</div>
+                        📧 <span style="flex:1;word-break:break-all;">${email}</span>
+                        ${hasEmail ? `<button class="copy-pill" onclick="copyText('${email}', 'Email copied!')">Copy</button>` : ''}
+                    </div>
+                    <div class="matrix-step">
+                        <div class="m-num">2</div>
+                        📣 <span>${dm.step_2_social_pressure}</span>
+                    </div>
+                    <div class="matrix-step">
+                        <div class="m-num">3</div>
+                        🌐 ${isURL ? `<a href="${dm.step_3_portal}" target="_blank" rel="noopener">Official Portal ↗</a>` : `<span>${dm.step_3_portal}</span>`}
+                    </div>
+                `;
+            }
+        } catch (e) {
+            tc.innerHTML = `<div class="timeline-empty">⚠️ Could not load case data. Check connection.</div>`;
+        }
+    }
+
+    // ── VERIFICATION REQUEST ──
+    function requestVerification() {
+        const company = document.getElementById('case_company').value.trim();
+        const sub = encodeURIComponent(`URGENT: Karma Claims DB Addition — ${company}`);
+        const body = encodeURIComponent(`Hi,\n\nPlease verify and add Nodal Officer details for:\n\nCompany: ${company}\n\nI need to escalate my claim urgently.\n\nThank you.`);
+        window.location.href = `mailto:thesoverignsentinel@gmail.com?subject=${sub}&body=${body}`;
+    }
+
+    // ── BS DETECTOR ──
+    async function detectBS() {
+        const input = document.getElementById('bs_input').value.trim();
+        if (!input) { toast('Paste a corporate email first', '⚠️'); return; }
+
+        setLoading('bs_btn', true);
+        try {
+            const res = await fetch(`${API_BASE}/api/detect-bs`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ corporate_reply: input })
+            });
+            const d = await res.json();
+            const text = d.analysis || '';
+            let tagClass = 'tag-stalling', tagLabel = 'Stalling Tactic';
+            if (text.toLowerCase().includes('illegal')) { tagClass = 'tag-illegal'; tagLabel = 'Illegal Demand'; }
+            else if (text.toLowerCase().includes('valid request')) { tagClass = 'tag-valid'; tagLabel = 'Valid Request'; }
+            showResult('bs_result', `<span class="bs-tag ${tagClass}">${tagLabel}</span><br>${text}`, 'rb-info');
+        } catch (e) {
+            showResult('bs_result', '⚠️ AI Detector is temporarily offline.', 'rb-info');
+        }
+        setLoading('bs_btn', false);
+    }
+
+    // ── FILE SELECTED ──
+    function onFileSelected(input) {
+        const nameEl = document.getElementById('file_name_display');
+        if (input.files.length > 0) {
+            nameEl.innerText = '✓ ' + input.files[0].name;
+            nameEl.style.display = 'block';
+        }
+    }
+
+    // ── REPORT WIN ──
+    async function reportWin() {
+        const amount = parseFloat(document.getElementById('win_amount').value);
+        const company = document.getElementById('case_company').value.trim();
+        const hasFile = document.getElementById('win_screenshot').files.length > 0;
+
+        if (!amount || amount <= 0) { toast('Enter the amount you recovered', '⚠️'); return; }
+        if (!company) { toast('Select a company at the top first', '⚠️'); return; }
+
+        setLoading('win_btn', true);
+        try {
+            const res = await fetch(`${API_BASE}/api/report-outcome`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount_recovered: amount, company_name: company, has_screenshot: hasFile })
+            });
+            const d = await res.json();
+            showResult('win_result', `🎉 BOOM! You beat ${company}. The community scoreboard has been updated!`, 'rb-success');
+            if (d.new_total) animateNum('total_recovered', d.new_total, 1200);
+            document.getElementById('tip_jar').style.display = 'block';
+            document.getElementById('win_btn').style.display = 'none';
+            launchConfetti();
+        } catch (e) {
+            toast('Error reporting. Please try again.', '⚠️');
+            setLoading('win_btn', false);
+        }
+    }
+
+    // ── CONFETTI ──
     function launchConfetti() {
         const canvas = document.getElementById('confetti-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const colors = ['#2563eb', '#16a34a', '#dc2626', '#fbbf24', '#8b5cf6'];
-        const pieces = Array.from({length: 100}, () => ({
-            x: Math.random() * canvas.width, y: -20,
-            r: 4 + Math.random() * 6, d: 2 + Math.random() * 5,
-            c: colors[Math.floor(Math.random() * colors.length)],
-            tilt: Math.random() * 10, tiltAngle: 0, tiltAngleInc: (0.05 + Math.random() * 0.05)
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const colors = ['#2563eb','#1a365d','#16a34a','#60a5fa','#fbbf24','#f97316','#dc2626'];
+        const pieces = Array.from({ length: 130 }, () => ({
+            x: Math.random() * canvas.width, y: -15 - Math.random() * 30,
+            r: 4 + Math.random() * 5, d: 2.5 + Math.random() * 4,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            tilt: 0, tAngle: Math.random() * Math.PI * 2, tSpeed: 0.08 + Math.random() * 0.1
         }));
-        let angle = 0;
-        function render() {
+        let frame = 0;
+        (function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             pieces.forEach(p => {
-                p.tiltAngle += p.tiltAngleInc; p.y += (Math.cos(angle + p.d) + 1 + p.r / 2) / 2;
-                p.x += Math.sin(angle); p.tilt = Math.sin(p.tiltAngle) * 15;
-                ctx.beginPath(); ctx.lineWidth = p.r; ctx.strokeStyle = p.c;
-                ctx.moveTo(p.x + p.tilt + p.r, p.y); ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r); ctx.stroke();
+                p.tAngle += p.tSpeed;
+                p.y += p.d;
+                p.tilt = Math.sin(p.tAngle) * 12;
+                ctx.beginPath();
+                ctx.lineWidth = p.r;
+                ctx.strokeStyle = p.color;
+                ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+                ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+                ctx.stroke();
             });
-            angle += 0.01;
-            if (pieces.some(p => p.y < canvas.height)) requestAnimationFrame(render);
+            if (++frame < 220) requestAnimationFrame(draw);
             else ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-        render();
+        })();
     }
 
-    window.onload = async function() {
-        try {
-            const res = await fetch(`${API_BASE}/api/dashboard`);
-            const data = await res.json();
-            animateNum("total_recovered", data.total_recovered);
-            animateNum("cases_won", data.cases_won);
-            animateNum("active_users", data.active_users);
-        } catch (e) { console.error("Scoreboard API offline"); }
-    };
-
-    function requestVerification() {
-        const company = document.getElementById("case_company").value.trim();
-        const subject = encodeURIComponent(`URGENT: Karma Claims Database Addition - ${company}`);
-        const body = encodeURIComponent(`Hi,\n\nPlease verify the Nodal Officer details and regulatory framework for ${company}.\n\nI need to escalate my claim.\n\nThanks.`);
-        window.location.href = `mailto:thesoverignsentinel@gmail.com?subject=${subject}&body=${body}`;
-    }
-
-    async function loadTimelineAndMatrix() {
-        const company = document.getElementById("case_company").value.trim();
-        if (!company) return;
-
-        const timelineBox = document.getElementById("timeline_alert");
-        const matrixBox = document.getElementById("matrix_alert");
-        const warningBox = document.getElementById("unverified_warning");
-        
-        try {
-            const resT = await fetch(`${API_BASE}/api/timeline/${encodeURIComponent(company)}`);
-            if (resT.ok) {
-                const dataT = await resT.json();
-                timelineBox.style.display = "block";
-                timelineBox.innerHTML = `<strong>Level 1 Deadline:</strong> ${dataT.level_1_deadline}<br><strong>Escalation Date:</strong> ${dataT.ombudsman_escalation_date || dataT.consumer_court_date}<br><br><em>${dataT.warning}</em>`;
-                warningBox.style.display = dataT.unverified ? "block" : "none";
-            }
-
-            const resM = await fetch(`${API_BASE}/api/matrix/${encodeURIComponent(company)}`);
-            if (resM.ok) {
-                const dataM = await resM.json();
-                matrixBox.style.display = "block";
-                matrixBox.innerHTML = `<strong>1. Direct Email:</strong> ${dataM.step_1_email} 
-                ${dataM.step_1_email.includes('@') ? `<button class="copy-btn" onclick="copyText('${dataM.step_1_email}')">Copy</button>` : ''}<br>
-                <strong>2. Pressure:</strong> ${dataM.step_2_social_pressure}<br>
-                <strong>3. Portal:</strong> <a href="${dataM.step_3_portal}" target="_blank">Click Here</a>`;
-            }
-        } catch (e) { showToast("Error loading case data."); }
-    }
-
-    async function detectBS() {
-        const input = document.getElementById("bs_input").value;
-        if (!input) { showToast("Paste an email first!"); return; }
-        
-        const btn = document.getElementById("bs_btn"); const result = document.getElementById("bs_result");
-        btn.innerText = "Analyzing..."; btn.disabled = true;
-
-        try {
-            const res = await fetch(`${API_BASE}/api/detect-bs`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ corporate_reply: input }) });
-            const data = await res.json();
-            
-            // Format BS Badge
-            let analysisHtml = data.analysis;
-            if(analysisHtml.toLowerCase().includes("illegal")) analysisHtml = `<strong style="color:red">[ILLEGAL DEMAND DETECTED]</strong><br>` + analysisHtml;
-            else if (analysisHtml.toLowerCase().includes("stalling")) analysisHtml = `<strong style="color:#b45309">[STALLING TACTIC DETECTED]</strong><br>` + analysisHtml;
-            
-            result.style.display = "block"; result.innerHTML = analysisHtml;
-        } catch (e) { result.innerText = "Error connecting to AI."; result.style.display = "block"; }
-        
-        btn.innerText = "Analyze Email"; btn.disabled = false;
-    }
-
-    async function reportWin() {
-        const amount = document.getElementById("win_amount").value;
-        const company = document.getElementById("case_company").value.trim();
-        const fileInput = document.getElementById("win_screenshot");
-        
-        if (!amount || !company) { showToast("Please enter amount and select company."); return; }
-        
-        const btn = document.getElementById("win_btn"); 
-        btn.innerText = "Submitting..."; btn.disabled = true;
-        const hasFile = fileInput.files.length > 0;
-
-        try {
-            const res = await fetch(`${API_BASE}/api/report-outcome`, { 
-                method: "POST", headers: { "Content-Type": "application/json" }, 
-                body: JSON.stringify({ amount_recovered: parseFloat(amount), company_name: company, has_screenshot: hasFile }) 
-            });
-            const data = await res.json();
-            
-            document.getElementById("win_result").style.display = "block"; 
-            document.getElementById("win_result").innerHTML = `🎉 BOOM! You beat them. Proof uploaded. Keep an eye on our Instagram!`;
-            if (data.new_total) animateNum("total_recovered", data.new_total);
-            
-            document.getElementById("tip_jar").style.display = "block";
-            launchConfetti();
-            btn.style.display = "none";
-            
-        } catch (e) { showToast("Error reporting outcome."); btn.innerText = "I Got My Refund!"; btn.disabled = false; }
-    }
-
+    // ── CHAT ──
+    let chatOpen = false;
     function toggleChat() {
-        const widget = document.getElementById('chat-widget');
-        widget.style.display = widget.style.display === 'flex' ? 'none' : 'flex';
-        if(widget.style.display === 'flex') document.getElementById('chat-input').focus();
+        chatOpen = !chatOpen;
+        const w = document.getElementById('chat-widget');
+        w.style.display = chatOpen ? 'flex' : 'none';
+        if (chatOpen) document.getElementById('chat-input').focus();
     }
 
     async function sendToChat() {
-        const input = document.getElementById('chat-input'); const body = document.getElementById('chat-body');
-        const msg = input.value.trim(); if (!msg) return;
-        
-        body.innerHTML += `<div style="display:flex; flex-direction:column;"><div class="user-msg">${msg}</div></div>`;
-        input.value = ''; body.scrollTop = body.scrollHeight;
+        const input = document.getElementById('chat-input');
+        const body = document.getElementById('chat-body');
+        const msg = input.value.trim();
+        if (!msg) return;
 
-        // Add Typing Indicator
-        const typingId = "type-" + Date.now();
-        body.innerHTML += `<div id="${typingId}" class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+        body.innerHTML += `<div class="user-msg">${msg}</div>`;
+        input.value = '';
+        body.scrollTop = body.scrollHeight;
+
+        const tid = 'typ-' + Date.now();
+        body.innerHTML += `<div class="typing-indicator" id="${tid}"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div>`;
         body.scrollTop = body.scrollHeight;
 
         try {
-            const res = await fetch(`${API_BASE}/api/chat`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ user_message: msg }) });
-            const data = await res.json();
-            document.getElementById(typingId).remove();
-            body.innerHTML += `<div class="bot-msg">${data.reply}</div>`;
-        } catch (e) { 
-            document.getElementById(typingId).remove();
-            body.innerHTML += `<div class="bot-msg" style="color:red">AI Strategist is offline right now.</div>`; 
+            const res = await fetch(`${API_BASE}/api/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_message: msg })
+            });
+            const d = await res.json();
+            document.getElementById(tid)?.remove();
+            body.innerHTML += `<div class="bot-msg">${d.reply}</div>`;
+        } catch (e) {
+            document.getElementById(tid)?.remove();
+            body.innerHTML += `<div class="bot-msg" style="color:#dc2626">⚠️ Strategist is offline right now.</div>`;
         }
         body.scrollTop = body.scrollHeight;
     }
+
+    window.onload = loadDashboard;
 </script>
 </body>
 </html>

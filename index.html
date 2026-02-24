@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Karma Claims | Fight Corporate Delays</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #1a365d; --secondary: #2563eb; --accent: #dc2626; 
@@ -18,21 +18,21 @@
         body {
             background: var(--bg);
             background-image: radial-gradient(ellipse at 10% 10%, rgba(37,99,235,0.05) 0%, transparent 45%), radial-gradient(ellipse at 90% 85%, rgba(26,54,93,0.07) 0%, transparent 45%);
-            color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; display: flex; flex-direction: column;
+            color: var(--text); font-family: 'Inter', -apple-system, sans-serif; min-height: 100vh; display: flex; flex-direction: column;
         }
 
         /* ── NAV ── */
         .nav {
             background: var(--primary); height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 16px rgba(26,54,93,0.28);
         }
-        .nav-brand { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: white; letter-spacing: -0.02em; }
+        .nav-brand { font-weight: 800; font-size: 18px; color: white; letter-spacing: -0.02em; }
         .nav-brand span { color: #60a5fa; }
-        .nav-link { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.2s; display: flex; align-items: center; gap: 6px; }
+        .nav-link { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 13.5px; font-weight: 600; transition: color 0.2s; display: flex; align-items: center; gap: 6px; }
         .nav-link:hover { color: white; }
 
         /* ── HERO ── */
         .hero { text-align: center; padding: 50px 20px 30px; }
-        .hero h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(32px, 5vw, 48px); color: var(--primary); letter-spacing: -0.03em; margin-bottom: 12px; line-height: 1.1; }
+        .hero h1 { font-weight: 800; font-size: clamp(32px, 5vw, 48px); color: var(--primary); letter-spacing: -0.03em; margin-bottom: 12px; line-height: 1.1; }
         .hero p { font-size: 16px; color: var(--text-muted); max-width: 500px; margin: 0 auto; line-height: 1.5; }
 
         .wrapper { max-width: 700px; margin: 0 auto; padding: 0 20px; flex: 1; }
@@ -43,13 +43,13 @@
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
         .full-width { grid-column: 1 / -1; }
 
-        .input-group label { display: block; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--primary); margin-bottom: 6px; }
-        .styled-input, .styled-textarea { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--text); background: #f8fafc; transition: all 0.2s; }
+        .input-group label { display: block; font-weight: 700; font-size: 13.5px; color: var(--primary); margin-bottom: 6px; }
+        .styled-input, .styled-textarea { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--text); background: #f8fafc; transition: all 0.2s; }
         .styled-input:focus, .styled-textarea:focus { outline: none; border-color: var(--secondary); background: white; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
-        .styled-textarea { resize: vertical; min-height: 100px; }
+        .styled-textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
 
         /* ── BUTTON ── */
-        .btn-generate { background: var(--primary); color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
+        .btn-generate { background: var(--primary); color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
         .btn-generate:hover { background: var(--secondary); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37,99,235,0.25); }
         .btn-generate:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
         
@@ -61,31 +61,31 @@
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .target-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 16px; border-radius: 10px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-        .target-info { font-size: 13px; color: #1e40af; }
-        .target-info strong { font-family: 'DM Mono', monospace; font-size: 14px; }
+        .target-info { font-size: 13.5px; color: #1e40af; }
+        .target-info strong { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 14.5px; }
         
         .draft-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 20px; position: relative; }
-        .draft-content { font-family: 'DM Mono', monospace; font-size: 13px; line-height: 1.6; color: var(--text); white-space: pre-wrap; }
+        .draft-content { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 13px; line-height: 1.6; color: var(--text); white-space: pre-wrap; }
         
         .copy-btn { background: white; border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .copy-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
 
         /* ── TOAST ── */
-        .toast { position: fixed; top: 80px; right: 20px; background: var(--success); color: white; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999; animation: slideIn 0.3s ease; }
+        .toast { position: fixed; top: 80px; right: 20px; background: var(--success); color: white; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 13.5px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999; animation: slideIn 0.3s ease; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         /* ── DASHBOARD BRIDGE ── */
         .dashboard-bridge { text-align: center; margin-top: 20px; margin-bottom: 50px; }
-        .dashboard-bridge a { display: inline-flex; align-items: center; gap: 8px; background: white; border: 2px solid var(--border); color: var(--primary); padding: 14px 28px; border-radius: 100px; text-decoration: none; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .dashboard-bridge a { display: inline-flex; align-items: center; gap: 8px; background: white; border: 2px solid var(--border); color: var(--primary); padding: 14px 28px; border-radius: 100px; text-decoration: none; font-weight: 700; font-size: 15px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .dashboard-bridge a:hover { border-color: var(--secondary); color: var(--secondary); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,99,235,0.1); }
-        .bridge-sub { font-size: 12px; color: var(--text-muted); margin-top: 10px; }
+        .bridge-sub { font-size: 13px; color: var(--text-muted); margin-top: 10px; }
 
         /* ── FOOTER STYLES ── */
         .footer { background: var(--primary); color: white; padding: 40px 20px; margin-top: auto; text-align: center; }
         .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
         .footer-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
         .footer-links a:hover { color: white; text-decoration: underline; }
-        .footer-text { font-size: 12px; color: rgba(255,255,255,0.5); }
+        .footer-text { font-size: 12.5px; color: rgba(255,255,255,0.5); line-height: 1.5;}
 
         @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
     </style>
@@ -164,7 +164,7 @@
 
             <div class="draft-box">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                    <strong style="color:var(--primary); font-family:'Syne', sans-serif; font-size:14px;">Your Legal Draft</strong>
+                    <strong style="color:var(--primary); font-weight:700; font-size:14.5px;">Your Legal Draft</strong>
                     <button class="copy-btn" onclick="copyData('draft_text')">📋 Copy Draft</button>
                 </div>
                 <div class="draft-content" id="draft_text"></div>
