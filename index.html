@@ -159,6 +159,7 @@
                     <option value="Byju's (Think & Learn Pvt Ltd)"><option value="Unacademy (Sorting Hat Technologies)"><option value="PhysicsWallah (PhysicsWallah Pvt Ltd)"><option value="Vedantu (Vedantu Innovations Pvt Ltd)"><option value="UpGrad (UpGrad Education Pvt Ltd)"><option value="Simplilearn (Simplilearn Solutions Pvt Ltd)"><option value="Cuemath (CueLearn Pvt Ltd)">
                     <option value="IndiGo (InterGlobe Aviation Ltd)"><option value="Air India (Air India Ltd)"><option value="SpiceJet (SpiceJet Ltd)"><option value="Akasa Air (SNV Aviation Pvt Ltd)"><option value="Air India Express (Air India Express Ltd)">
                     <option value="Samsung India (Samsung India Electronics)"><option value="Apple India (Apple India Pvt Ltd)"><option value="Xiaomi India (Xiaomi Technology India)"><option value="OnePlus India (OPlus Mobitech India)"><option value="Dell India (Dell International Services)"><option value="HP India (HP India Sales Pvt Ltd)"><option value="Lenovo India (Lenovo India Pvt Ltd)"><option value="LG India (LG Electronics India Pvt Ltd)"><option value="Sony India (Sony India Pvt Ltd)"><option value="boAt Lifestyle (Imagine Marketing Ltd)"><option value="Urban Company (UrbanClap Technologies)">
+<option value="National Cyber Crime Reporting Portal (MHA)"><option value="Meta Grievance Officer (Facebook/Instagram)"><option value="WhatsApp Grievance Officer"><option value="Google India Grievance Officer (YouTube/Search)"><option value="X (Twitter) Grievance Officer">
                 </datalist>
                 <div class="company-error" id="company_error">⚠ Please select a verified company from the dropdown.</div>
             </div>
@@ -273,6 +274,29 @@
                 *(Note: Please do not send sensitive passwords or PINs to these email addresses)*
             </p>
         </div>
+    </div>
+</div>
+
+<div id="ai_bubble" onclick="toggleTriageChat()" style="position: fixed; bottom: 30px; right: 30px; background: var(--accent); color: white; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4); z-index: 1000; transition: transform 0.2s;">
+    ⚖️
+</div>
+
+<div id="triage_chat_window" style="display: none; position: fixed; bottom: 105px; right: 30px; width: 360px; height: 480px; background: var(--surface); border-radius: 16px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); border: 1px solid var(--border); z-index: 1000; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif;">
+    <div style="background: var(--primary); color: white; padding: 16px; font-weight: 700; font-size: 15px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%;"></div>
+            Intake Copilot
+        </div>
+        <span onclick="toggleTriageChat()" style="cursor: pointer; font-size: 20px; line-height: 1;">×</span>
+    </div>
+    <div id="triage_chat_body" style="flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; font-size: 14px; background: #f8fafc;">
+        <div style="background: white; border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 12px; border-bottom-left-radius: 4px; align-self: flex-start; max-width: 85%; line-height: 1.5;">
+            Hi. I'm your Intake Paralegal. Tell me what happened, and I will extract the legal facts to automatically draft your notice.
+        </div>
+    </div>
+    <div style="padding: 12px; background: white; border-top: 1px solid var(--border); display: flex; gap: 8px;">
+        <input type="text" id="triage_input" placeholder="e.g., Zepto sent me fake AirPods..." style="flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; outline: none; font-family: 'Inter';" onkeypress="if(event.key === 'Enter') sendTriageMessage()">
+        <button onclick="sendTriageMessage()" style="background: var(--secondary); color: white; border: none; padding: 0 16px; border-radius: 8px; cursor: pointer; font-weight: 600;">Send</button>
     </div>
 </div>
 
@@ -400,6 +424,66 @@
         }
     }
 
+    // --- AI INTAKE COPILOT LOGIC ---
+    let triageHistory = [];
+
+    function toggleTriageChat() {
+        const chat = document.getElementById('triage_chat_window');
+        chat.style.display = chat.style.display === 'none' || chat.style.display === '' ? 'flex' : 'none';
+        if (chat.style.display === 'flex') document.getElementById('triage_input').focus();
+    }
+
+    async function sendTriageMessage() {
+        const input = document.getElementById('triage_input');
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        const body = document.getElementById('triage_chat_body');
+        body.innerHTML += `<div style="background: var(--secondary); color: white; padding: 12px; border-radius: 12px; border-bottom-right-radius: 4px; align-self: flex-end; max-width: 85%; line-height: 1.5;">${msg}</div>`;
+        input.value = '';
+        body.scrollTop = body.scrollHeight;
+
+        const tid = 'typ-' + Date.now();
+        body.innerHTML += `<div id="${tid}" style="background: white; border: 1px solid var(--border); padding: 12px; border-radius: 12px; border-bottom-left-radius: 4px; align-self: flex-start;">Typing...</div>`;
+        body.scrollTop = body.scrollHeight;
+
+        try {
+            const res = await fetch(`${API_BASE}/api/triage-chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_message: msg, chat_history: triageHistory })
+            });
+            const d = await res.json();
+            document.getElementById(tid)?.remove();
+            
+            if (d.status === "complete" && d.extracted_data) {
+                body.innerHTML += `<div style="background: var(--success); color: white; padding: 12px; border-radius: 12px; align-self: flex-start; max-width: 85%;">🚨 ${d.reply}</div>`;
+                body.scrollTop = body.scrollHeight;
+                
+                const legalData = JSON.parse(d.extracted_data);
+                document.getElementById('target_company').value = legalData.company_name || "";
+                document.getElementById('user_name').value = legalData.user_name || "";
+                document.getElementById('disputed_amount').value = (legalData.disputed_amount || "").replace(/\D/g,'') || "0";
+                document.getElementById('order_id').value = legalData.order_id || "N/A";
+                document.getElementById('complaint_details').value = "Auto-extracted by AI Intake Copilot:\n\n" + msg;
+                document.getElementById('legal_consent').checked = true;
+                
+                setTimeout(() => {
+                    toggleTriageChat();
+                    generateDraft();
+                }, 1500);
+                
+            } else {
+                body.innerHTML += `<div style="background: white; border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 12px; border-bottom-left-radius: 4px; align-self: flex-start; max-width: 85%; line-height: 1.5;">${d.reply}</div>`;
+                triageHistory.push({ role: "user", content: msg }, { role: "assistant", content: d.reply });
+            }
+        } catch (e) {
+            document.getElementById(tid)?.remove();
+            body.innerHTML += `<div style="background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 12px; align-self: flex-start;">⚠️ Connection error.</div>`;
+        }
+        body.scrollTop = body.scrollHeight;
+    }
+    
     // --- SECURITY BOUNCER: Disable Right-Click and View Source ---
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.onkeydown = function(e) { 
