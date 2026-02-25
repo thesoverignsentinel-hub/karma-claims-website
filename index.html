@@ -339,6 +339,9 @@
                 const safeSubject = encodeURIComponent(data.subject);
                 const attachmentWarning = "⚠️ CRITICAL STEP:\n\nYou must MANUALLY attach your screenshots, receipts, and proofs on the next screen before you hit Send.\n\nClick OK to open your email app.";
                 
+                // 1. Mobile Device Detector
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
                 // Heavy Notice Fallback
                 if (safeBody.length > 7000) {
                     const heavyNotice = function () {
@@ -350,7 +353,20 @@
                     document.getElementById("outlook_btn").onclick = heavyNotice;
                     document.getElementById("yahoo_btn").onclick = heavyNotice;
                     document.getElementById("apple_btn").onclick = heavyNotice;
+                
+                } else if (isMobile) {
+                    // 2. MOBILE LOGIC: Force all buttons to use native OS Mail App
+                    const mobileMailHandler = function () {
+                        alert(attachmentWarning);
+                        window.location.href = `mailto:${data.target_email}?bcc=${bccEmail}&subject=${safeSubject}&body=${safeBody}`;
+                    };
+                    document.getElementById("gmail_btn").onclick = mobileMailHandler;
+                    document.getElementById("outlook_btn").onclick = mobileMailHandler;
+                    document.getElementById("yahoo_btn").onclick = mobileMailHandler;
+                    document.getElementById("apple_btn").onclick = mobileMailHandler;
+                
                 } else {
+                    // 3. DESKTOP LOGIC: Use standard Webmail Links
                     document.getElementById("gmail_btn").onclick = function () {
                         alert(attachmentWarning);
                         window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${data.target_email}&bcc=${bccEmail}&su=${safeSubject}&body=${safeBody}`, '_blank');
