@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karma Claims | Fight Corporate Delays</title>
+    <title>Karma Claims | Demand Corporate Accountability</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -33,7 +33,7 @@
         .hero h1 { font-weight: 800; font-size: clamp(32px, 5vw, 48px); color: var(--primary); letter-spacing: -0.03em; margin-bottom: 12px; line-height: 1.1; }
         .hero p { font-size: 16px; color: var(--text-muted); max-width: 500px; margin: 0 auto; line-height: 1.5; }
 
-        .wrapper { max-width: 700px; margin: 0 auto; padding: 0 20px; flex: 1; }
+        .wrapper { max-width: 800px; margin: 0 auto; padding: 0 20px; flex: 1; }
 
         /* ── GENERATOR CARD ── */
         .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); margin-bottom: 40px; }
@@ -59,17 +59,26 @@
         .spinner { display: none; width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ── RESULT AREA (Restored V2.6 Logic) ── */
-        #result_area { display: none; animation: fadeUp 0.4s ease; margin-top: 30px; border-top: 2px solid var(--border); padding-top: 30px;}
+        /* ── RESULT AREA (Restored Grid & QR Code) ── */
+        #result_section { display: none; animation: fadeUp 0.4s ease; margin-top: 30px; border-top: 2px solid var(--border); padding-top: 30px;}
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
+        .result-grid { display: grid; grid-template-columns: 1fr 240px; gap: 24px; align-items: start; margin-top: 15px; }
+
         .target-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 16px; border-radius: 10px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
         .target-info { font-size: 13.5px; color: #1e40af; }
         .target-info strong { font-family: ui-monospace, monospace; font-size: 14.5px; color: var(--primary); }
 
         .proof-warning { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px; margin-bottom: 16px; font-size: 13.5px; color: #92400e; border-radius: 0 8px 8px 0; font-weight: 600; line-height: 1.5; }
         
-        .draft-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; font-family: ui-monospace, monospace; font-size: 13px; line-height: 1.6; color: var(--text); white-space: pre-wrap; height: 300px; overflow-y: auto; }
+        .draft-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; font-family: ui-monospace, monospace; font-size: 13px; line-height: 1.6; color: var(--text); white-space: pre-wrap; height: 320px; overflow-y: auto; }
+
+        /* ── DONATION BOX ── */
+        .fund-card { border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .fund-card h3 { color: #b91c1c; font-size: 15px; margin-bottom: 8px; font-weight: 800; }
+        .fund-card p { font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+        .fund-qr { width: 100%; max-width: 140px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);}
+        .fund-upi { font-family: ui-monospace, monospace; font-size: 12px; font-weight: 600; color: var(--primary); background: #f1f5f9; padding: 4px 8px; border-radius: 4px; display: inline-block;}
 
         /* ── 4 BOXES MAILING SYSTEM ── */
         .mail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
@@ -103,7 +112,7 @@
         .footer-links a:hover { color: white; text-decoration: underline; }
         .footer-text { font-size: 12.5px; color: rgba(255,255,255,0.5); line-height: 1.5;}
 
-        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .mail-grid{ grid-template-columns: 1fr;} }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .mail-grid{ grid-template-columns: 1fr;} .result-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -114,7 +123,7 @@
 </nav>
 
 <div class="hero">
-    <h1>Fight Corporate BS. Legally.</h1>
+    <h1>Hold Corporations Accountable. Legally.</h1>
     <p>AI generates a fierce, legally-sound grievance notice tailored to Indian consumer laws in seconds.</p>
 </div>
 
@@ -178,28 +187,41 @@
         </button>
 
         <div id="result_section">
-            <h3 style="color: var(--primary); margin-bottom: 15px; font-weight: 800;">Your Legal Package is Ready</h3>
+            <h3 style="color: var(--primary); font-weight: 800;">Your Legal Package is Ready</h3>
             
-            <div class="target-box">
-                <div class="target-info">To (Nodal Officer): <br><strong id="out_email">...</strong></div>
-                <div class="target-info">Subject Line: <br><strong id="out_subject">...</strong></div>
-            </div>
+            <div class="result-grid">
+                
+                <div class="result-main">
+                    <div class="target-box">
+                        <div class="target-info">To (Nodal Officer): <br><strong id="out_email">...</strong></div>
+                        <div class="target-info">Subject Line: <br><strong id="out_subject">...</strong></div>
+                    </div>
 
-            <div class="proof-warning">
-                ⚠️ CRITICAL STEP: You must MANUALLY attach your screenshots, receipts, and proofs on the next screen before you hit Send in your email client!
-            </div>
+                    <div class="proof-warning">
+                        ⚠️ CRITICAL STEP: You must MANUALLY attach your screenshots, receipts, and proofs on the next screen before you hit Send in your email client!
+                    </div>
 
-            <div class="draft-box" id="out_body"></div>
+                    <div class="draft-box" id="out_body"></div>
 
-            <h4 style="color: var(--primary); margin-bottom: 10px;">Select your email provider to send:</h4>
-            <div class="mail-grid">
-                <button class="mail-btn gmail" id="gmail_btn">🔴 Gmail</button>
-                <button class="mail-btn outlook" id="outlook_btn">🔵 Outlook</button>
-                <button class="mail-btn yahoo" id="yahoo_btn">🟣 Yahoo</button>
-                <button class="mail-btn apple" id="apple_btn"> Apple / Default</button>
+                    <h4 style="color: var(--primary); margin-bottom: 10px;">Select your email provider to send:</h4>
+                    <div class="mail-grid">
+                        <button class="mail-btn gmail" id="gmail_btn">🔴 Gmail</button>
+                        <button class="mail-btn outlook" id="outlook_btn">🔵 Outlook</button>
+                        <button class="mail-btn yahoo" id="yahoo_btn">🟣 Yahoo</button>
+                        <button class="mail-btn apple" id="apple_btn"> Apple / Default</button>
+                    </div>
+                    
+                    <button class="copy-btn" onclick="copyDraft()">📋 Copy Draft to Clipboard</button>
+                </div>
+
+                <div class="fund-card">
+                    <h3>☕ Support Karma Claims</h3>
+                    <p>Built by a solo founder fighting corporate impunity. Help us keep the servers running and the platform 100% free.</p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi%3A%2F%2Fpay%3Fpa%3Dss.aggarwal.17%40okaxis%26pn%3DKarma%2520Claims" alt="UPI QR Code" class="fund-qr">
+                    <div class="fund-upi">ss.aggarwal.17@okaxis</div>
+                </div>
+
             </div>
-            
-            <button class="copy-btn" onclick="copyDraft()">📋 Copy Draft to Clipboard</button>
         </div>
     </div>
 
@@ -305,13 +327,13 @@
             if (response.ok) {
                 const data = await response.json();
                 
-                // Display Results UI (From V2.6)
+                // Display Results UI
                 document.getElementById("result_section").style.display = "block";
                 document.getElementById("out_email").innerText = data.target_email;
                 document.getElementById("out_subject").innerText = data.subject;
                 document.getElementById("out_body").innerText = data.draft;
 
-                // Mailing System & Fallback Logic (From V2.6)
+                // Mailing System & Fallback Logic
                 const bccEmail = "thesoverignsentinel@gmail.com";
                 const safeBody = encodeURIComponent(data.draft);
                 const safeSubject = encodeURIComponent(data.subject);
