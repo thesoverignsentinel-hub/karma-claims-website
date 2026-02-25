@@ -42,8 +42,8 @@
         .scoreboard-amount { font-size: clamp(38px, 8vw, 64px); font-weight: 800; color: #60a5fa; letter-spacing: -0.03em; line-height: 1; position: relative; z-index: 1; }
         .scoreboard-amount .rupee { font-size: 0.55em; vertical-align: top; margin-top: 0.15em; }
         .scoreboard-pills { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; position: relative; z-index: 1; }
-        .s-pill { background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.14); padding: 5px 14px; border-radius: 100px; font-size: 12.5px; color: rgba(255,255,255,0.8); }
-        .s-pill strong { color: #93c5fd; }
+        .s-pill { background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.14); padding: 5px 14px; border-radius: 100px; font-size: 12.5px; font-weight: 500; color: rgba(255,255,255,0.8); }
+        .s-pill strong { color: #93c5fd; font-weight: 700; }
 
         /* ── WRAPPER ── */
         .wrapper { max-width: 1040px; margin: 0 auto; padding: 26px 18px; }
@@ -60,7 +60,6 @@
         .company-input { width: 100%; padding: 11px 14px 11px 36px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14.5px; font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); transition: border-color 0.2s, box-shadow 0.2s; }
         .company-input:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); background: white; }
 
-        /* ── UNVERIFIED WARNING ── */
         .unverified-banner { display: none; margin-top: 12px; background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #f59e0b; border-radius: 0 8px 8px 0; padding: 12px 14px; animation: slideDown 0.3s ease; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
         .ub-title { font-weight: 700; font-size: 13.5px; color: #92400e; margin-bottom: 4px; }
@@ -89,17 +88,17 @@
         .ddot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
         .ddot.blue { background: var(--secondary); } .ddot.orange { background: #f97316; }
         .d-label { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 2px; }
-        .d-date { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 13.5px; font-weight: 600; color: var(--text); }
-        .deadline-warning { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 12px; font-size: 12.5px; color: #92400e; margin-top: 12px; display: flex; align-items: flex-start; gap: 7px; line-height: 1.5; }
+        .d-date { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 13.5px; font-weight: 600; color: var(--text); }
+        .deadline-warning { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 12px; font-size: 12.5px; color: #92400e; margin-top: 12px; display: flex; align-items: flex-start; gap: 7px; line-height: 1.5; font-weight: 500; }
 
         .matrix-divider { font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin: 16px 0 10px; }
         .matrix-step { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 7px; font-size: 13px; color: var(--text); background: var(--bg); animation: fadeUp 0.35s ease both; }
         .matrix-step:nth-child(2) { animation-delay: 0.06s; } .matrix-step:nth-child(3) { animation-delay: 0.12s; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
         .m-num { width: 22px; height: 22px; background: var(--primary); color: white; border-radius: 50%; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .matrix-step a { color: var(--secondary); font-weight: 500; text-decoration: none; }
+        .matrix-step a { color: var(--secondary); font-weight: 600; text-decoration: none; }
         .matrix-step a:hover { text-decoration: underline; }
-        .copy-pill { margin-left: auto; background: none; border: 1px solid var(--border); color: var(--text-muted); font-size: 11.5px; font-weight: 500; padding: 2px 8px; border-radius: 4px; cursor: pointer; transition: all 0.15s; width: auto; white-space: nowrap; font-family: 'Inter', sans-serif; }
+        .copy-pill { margin-left: auto; background: none; border: 1px solid var(--border); color: var(--text-muted); font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 4px; cursor: pointer; transition: all 0.15s; width: auto; white-space: nowrap; font-family: 'Inter', sans-serif; }
         .copy-pill:hover { background: var(--border); color: var(--text); }
 
         /* ── INPUTS ── */
@@ -142,7 +141,7 @@
         .win-inputs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 2px; }
         .amount-wrap { position: relative; }
         .amount-prefix { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: ui-monospace, SFMono-Regular, monospace; font-size: 14.5px; color: var(--text-muted); pointer-events: none; }
-        .amount-wrap .styled-input { padding-left: 26px; font-family: ui-monospace, SFMono-Regular, monospace;}
+        .amount-wrap .styled-input { padding-left: 26px; font-family: ui-monospace, SFMono-Regular, monospace; font-weight: 500;}
 
         .file-drop { border: 1.5px dashed #93c5fd; background: #eff6ff; border-radius: 8px; padding: 14px; text-align: center; cursor: pointer; transition: background 0.2s, border-color 0.2s; position: relative; }
         .file-drop:hover { background: #dbeafe; border-color: var(--secondary); }
@@ -150,14 +149,14 @@
         .file-drop-icon { font-size: 18px; margin-bottom: 3px; }
         .file-drop-text { font-size: 12.5px; color: var(--secondary); font-weight: 600; }
         .file-drop-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
-        .file-name { font-size: 12.5px; color: var(--success); font-weight: 500; margin-top: 4px; display: none; }
+        .file-name { font-size: 12.5px; color: var(--success); font-weight: 600; margin-top: 4px; display: none; }
 
         /* ── TIP JAR ── */
         .tip-jar { display: none; margin-top: 16px; background: #fef2f2; border: 2px dashed #fca5a5; border-radius: 12px; padding: 20px; text-align: center; animation: fadeUp 0.4s ease; }
         .tip-title { font-weight: 800; font-size: 15.5px; color: #b91c1c; margin-bottom: 6px; }
         .tip-sub { font-size: 13px; color: #64748b; line-height: 1.55; margin-bottom: 14px; }
         .tip-jar img { width: 148px; height: 148px; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); display: block; margin: 0 auto 10px; }
-        .tip-upi { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 13.5px; font-weight: 500; color: var(--primary); background: white; border: 1px solid var(--border); padding: 6px 14px; border-radius: 6px; display: inline-block; }
+        .tip-upi { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 13.5px; font-weight: 600; color: var(--primary); background: white; border: 1px solid var(--border); padding: 6px 14px; border-radius: 6px; display: inline-block; }
 
         /* ── CHAT ── */
         #chat-toggle { position: fixed; bottom: 24px; right: 24px; background: var(--primary); color: white; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 8px 24px rgba(26,54,93,0.4); font-size: 22px; z-index: 1999; border: none; transition: transform 0.2s, box-shadow 0.2s; }
@@ -167,7 +166,7 @@
         #chat-header { background: var(--primary); padding: 13px 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .ch-avatar { width: 30px; height: 30px; background: rgba(96,165,250,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
         .ch-name { font-weight: 700; font-size: 13.5px; color: white; }
-        .ch-sub { font-size: 10.5px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 4px; }
+        .ch-sub { font-size: 10.5px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 4px; font-weight: 500;}
         .ch-sub-dot { width: 5px; height: 5px; background: #22c55e; border-radius: 50%; }
         .ch-close { margin-left: auto; color: rgba(255,255,255,0.5); font-size: 18px; line-height: 1; }
         #chat-body { height: 255px; overflow-y: auto; padding: 12px; background: #f8fafc; display: flex; flex-direction: column; gap: 8px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
@@ -198,13 +197,13 @@
 
 <nav class="nav">
     <div class="nav-left">
-        <a href="index.html" class="back-nav">← Generator</a>
+        <a href="index.html" class="back-nav">← Back to Generator</a>
         <div class="nav-divider"></div>
         <div class="nav-brand">Karma<span>Claims</span></div>
     </div>
     <div class="nav-status">
         <div class="status-dot"></div>
-        v4.1 Online
+        v5.0 Online
     </div>
 </nav>
 
@@ -232,7 +231,7 @@
         <div class="search-wrap">
             <span class="search-icon">🔍</span>
             <input
-                list="company_list"
+                list="company_db"
                 id="case_company"
                 class="company-input"
                 placeholder="Start typing — e.g. Zomato, PhonePe, HDFC Bank..."
@@ -240,18 +239,21 @@
                 onchange="loadTimelineAndMatrix()"
                 autocomplete="off"
             >
-            <datalist id="company_list">
-                <option value="Amazon India (Amazon Seller Services Pvt Ltd)"><option value="Flipkart (Flipkart Internet Pvt Ltd)"><option value="Myntra (Myntra Designs Pvt Ltd)"><option value="Meesho (Fashnear Technologies Pvt Ltd)"><option value="Swiggy (Bundl Technologies Pvt Ltd)"><option value="Zomato (Zomato Ltd)"><option value="Blinkit (Blink Commerce Pvt Ltd)"><option value="Zepto (Kiranakart Technologies Pvt Ltd)"><option value="Nykaa (FSN E-Commerce Ventures)">
-                <option value="Google Pay (Google India Digital Services)"><option value="PhonePe (PhonePe Pvt Ltd)"><option value="Paytm (One97 Communications Ltd)"><option value="CRED (Dreamplug Technologies Pvt Ltd)"><option value="BharatPe (Resilient Innovations Pvt Ltd)"><option value="HDFC Bank (HDFC Bank Limited)"><option value="SBI (State Bank of India)"><option value="ICICI Bank (ICICI Bank Limited)"><option value="Axis Bank (Axis Bank Limited)">
-                <option value="Ola Cabs (ANI Technologies Pvt Ltd)"><option value="Uber India (Uber India Systems Pvt Ltd)"><option value="Rapido (Roppen Transportation Services)"><option value="MakeMyTrip (MakeMyTrip India Pvt Ltd)">
-                <option value="Reliance Jio (Reliance Jio Infocomm Ltd)"><option value="Bharti Airtel (Bharti Airtel Ltd)"><option value="Vodafone Idea (Vi)">
-                <option value="Byju's (Think & Learn Pvt Ltd)"><option value="Unacademy (Sorting Hat Technologies)"><option value="PhysicsWallah">
+            <datalist id="company_db">
+                <option value="Amazon India (Amazon Seller Services Pvt Ltd)"><option value="Flipkart (Flipkart Internet Pvt Ltd)"><option value="Myntra (Myntra Designs Pvt Ltd)"><option value="Meesho (Fashnear Technologies Pvt Ltd)"><option value="Nykaa (FSN E-Commerce Ventures)"><option value="Ajio (Reliance Retail Ltd)"><option value="Tata CLiQ (Tata UniStore Ltd)"><option value="Snapdeal (Snapdeal Pvt Ltd)"><option value="Swiggy (Bundl Technologies Pvt Ltd)"><option value="Zomato (Zomato Ltd)"><option value="Blinkit (Blink Commerce Pvt Ltd)"><option value="Zepto (Kiranakart Technologies Pvt Ltd)"><option value="BigBasket (Supermarket Grocery Supplies)"><option value="JioMart (Reliance Retail Ltd)"><option value="Licious (Delightful Gourmet Pvt Ltd)">
+                <option value="Google Pay (Google India Digital Services)"><option value="PhonePe (PhonePe Pvt Ltd)"><option value="Paytm (One97 Communications Ltd)"><option value="CRED (Dreamplug Technologies Pvt Ltd)"><option value="BharatPe (Resilient Innovations Pvt Ltd)"><option value="MobiKwik (One MobiKwik Systems Ltd)"><option value="Freecharge (Freecharge Payment Technologies)"><option value="Amazon Pay (Amazon Pay India Pvt Ltd)"><option value="Slice (Garagepreneurs Internet Pvt Ltd)"><option value="Jupiter (Amica Financial Technologies)">
+                <option value="HDFC Bank (HDFC Bank Limited)"><option value="SBI (State Bank of India)"><option value="ICICI Bank (ICICI Bank Limited)"><option value="Axis Bank (Axis Bank Limited)"><option value="Kotak Mahindra Bank (Kotak Mahindra Bank Ltd)"><option value="Punjab National Bank (PNB)"><option value="Bank of Baroda (BoB)"><option value="IndusInd Bank (IndusInd Bank Limited)"><option value="IDFC First Bank (IDFC FIRST Bank Ltd)"><option value="Yes Bank (YES BANK Limited)">
+                <option value="Ola Cabs (ANI Technologies Pvt Ltd)"><option value="Uber India (Uber India Systems Pvt Ltd)"><option value="Rapido (Roppen Transportation Services)"><option value="MakeMyTrip (MakeMyTrip India Pvt Ltd)"><option value="Goibibo (Ibibo Group Pvt Ltd)"><option value="EaseMyTrip (Easy Trip Planners Ltd)"><option value="Yatra (Yatra Online Ltd)"><option value="Cleartrip (Cleartrip Pvt Ltd)"><option value="RedBus (Ibibo Group Pvt Ltd)"><option value="IRCTC (Indian Railway Catering and Tourism Corp)">
+                <option value="Reliance Jio (Reliance Jio Infocomm Ltd)"><option value="Bharti Airtel (Bharti Airtel Ltd)"><option value="Vodafone Idea (Vi)"><option value="BSNL (Bharat Sanchar Nigam Limited)"><option value="ACT Fibernet (Atria Convergence Technologies)"><option value="Hathway (Hathway Cable & Datacom Ltd)"><option value="Excitel (Excitel Broadband Pvt Ltd)">
+                <option value="Byju's (Think & Learn Pvt Ltd)"><option value="Unacademy (Sorting Hat Technologies)"><option value="PhysicsWallah (PhysicsWallah Pvt Ltd)"><option value="Vedantu (Vedantu Innovations Pvt Ltd)"><option value="UpGrad (UpGrad Education Pvt Ltd)"><option value="Simplilearn (Simplilearn Solutions Pvt Ltd)"><option value="Cuemath (CueLearn Pvt Ltd)">
+                <option value="IndiGo (InterGlobe Aviation Ltd)"><option value="Air India (Air India Ltd)"><option value="SpiceJet (SpiceJet Ltd)"><option value="Akasa Air (SNV Aviation Pvt Ltd)"><option value="Air India Express (Air India Express Ltd)">
+                <option value="Samsung India (Samsung India Electronics)"><option value="Apple India (Apple India Pvt Ltd)"><option value="Xiaomi India (Xiaomi Technology India)"><option value="OnePlus India (OPlus Mobitech India)"><option value="Dell India (Dell International Services)"><option value="HP India (HP India Sales Pvt Ltd)"><option value="Lenovo India (Lenovo India Pvt Ltd)"><option value="LG India (LG Electronics India Pvt Ltd)"><option value="Sony India (Sony India Pvt Ltd)"><option value="boAt Lifestyle (Imagine Marketing Ltd)"><option value="Urban Company (UrbanClap Technologies)">
             </datalist>
         </div>
 
         <div class="unverified-banner" id="unverified_banner">
             <div class="ub-title">⚠️ Unverified Company</div>
-            <p>This company isn't in our verified database yet. We'll apply generic CCPA timelines — you can still proceed, or request fast-track verification below.</p>
+            <p>This company isn't in our verified database yet. We'll apply standard regulatory timelines — you can still proceed, or request fast-track verification below.</p>
             <button class="ub-btn" onclick="requestVerification()">
                 📧 Request Verification (24hr SLA)
             </button>
@@ -281,10 +283,10 @@
         <div class="widget">
             <div class="widget-header">
                 <div class="w-icon red">🕵️</div>
-                <div class="w-title">Corporate BS Detector</div>
+                <div class="w-title">Corporate Stalling Detector</div>
                 <span class="w-badge badge-red">AI</span>
             </div>
-            <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:10px;">Paste their confusing reply. AI decodes stalling tactics instantly.</p>
+            <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:10px;">Paste their confusing reply. AI decodes stalling tactics and illegal demands instantly.</p>
             <textarea class="styled-textarea" id="bs_input" placeholder="e.g., 'Please provide a Level 2 authorization ID to proceed with your refund request...'"></textarea>
             <button class="btn btn-primary" id="bs_btn" onclick="detectBS()">
                 <span class="btn-spinner"></span>
@@ -454,10 +456,10 @@
             if (resT.ok) {
                 const d = await resT.json();
                 const isRBI = !!d.ombudsman_escalation_date;
-                const escalLabel = isRBI ? 'RBI Ombudsman Date' : 'Consumer Court Date';
+                const escalLabel = isRBI ? 'RBI Ombudsman Date' : 'Regulator Escalation Date';
                 const escalDate = d.ombudsman_escalation_date || d.consumer_court_date;
 
-                badge.innerText = isRBI ? 'RBI' : 'CCPA';
+                badge.innerText = isRBI ? 'RBI' : (company.includes('Airlines') ? 'DGCA' : (company.includes('Telecom') ? 'TRAI' : 'CCPA'));
                 badge.style.display = 'inline-block';
                 banner.style.display = d.unverified ? 'block' : 'none';
 
@@ -515,7 +517,7 @@
         window.location.href = `mailto:thesoverignsentinel@gmail.com?subject=${sub}&body=${body}`;
     }
 
-    // ── BS DETECTOR ──
+    // ── STALLING DETECTOR ──
     async function detectBS() {
         const input = document.getElementById('bs_input').value.trim();
         if (!input) { toast('Paste a corporate email first', '⚠️'); return; }
@@ -648,6 +650,14 @@
     }
 
     window.onload = loadDashboard;
+
+    // --- SECURITY BOUNCER: Disable Right-Click and View Source ---
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.onkeydown = function(e) { 
+        if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) { 
+            return false; 
+        } 
+    };
 </script>
 </body>
 </html>

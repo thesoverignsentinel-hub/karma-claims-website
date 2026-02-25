@@ -45,33 +45,34 @@
         .styled-input:focus, .styled-textarea:focus { outline: none; border-color: var(--secondary); background: white; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
         .styled-textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
 
+        .company-error { display: none; font-size: 13px; color: var(--accent); margin-top: 8px; font-weight: 600; }
+
         /* ── CONSENT BOX ── */
-        .consent-box { background: #fef2f2; border: 1px solid #fca5a5; padding: 12px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: #991b1b; line-height: 1.4; }
-        .consent-box input[type="checkbox"] { margin-top: 2px; accent-color: var(--accent); cursor: pointer;}
+        .consent-box { background: #fef2f2; border: 1px solid #fca5a5; padding: 12px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px; font-size: 12.5px; color: #991b1b; line-height: 1.4; }
+        .consent-box input[type="checkbox"] { margin-top: 2px; width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent); }
         .consent-box a { color: var(--accent); font-weight: 700; text-decoration: underline; cursor: pointer; }
 
         /* ── BUTTON ── */
-        .btn-generate { background: var(--primary); color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-generate { background: var(--primary); color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-generate:hover { background: var(--secondary); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37,99,235,0.25); }
         .btn-generate:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
         .spinner { display: none; width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ── RESULT AREA ── */
+        /* ── RESULT AREA (Restored V2.6 Logic) ── */
         #result_area { display: none; animation: fadeUp 0.4s ease; margin-top: 30px; border-top: 2px solid var(--border); padding-top: 30px;}
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .target-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 16px; border-radius: 10px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .target-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 16px; border-radius: 10px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
         .target-info { font-size: 13.5px; color: #1e40af; }
-        .target-info strong { font-family: ui-monospace, monospace; font-size: 14.5px; }
+        .target-info strong { font-family: ui-monospace, monospace; font-size: 14.5px; color: var(--primary); }
 
-        .proof-warning { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px; margin-bottom: 16px; font-size: 13px; color: #92400e; border-radius: 0 8px 8px 0; font-weight: 600;}
+        .proof-warning { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px; margin-bottom: 16px; font-size: 13.5px; color: #92400e; border-radius: 0 8px 8px 0; font-weight: 600; line-height: 1.5; }
         
-        .draft-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
-        .draft-content { font-family: ui-monospace, monospace; font-size: 13px; line-height: 1.6; color: var(--text); white-space: pre-wrap; }
+        .draft-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; font-family: ui-monospace, monospace; font-size: 13px; line-height: 1.6; color: var(--text); white-space: pre-wrap; height: 300px; overflow-y: auto; }
 
         /* ── 4 BOXES MAILING SYSTEM ── */
-        .mail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .mail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
         .mail-btn { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: white; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--text);}
         .mail-btn:hover { background: #f1f5f9; border-color: #cbd5e1; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.02);}
         .mail-btn.gmail { color: #ea4335; }
@@ -79,17 +80,21 @@
         .mail-btn.yahoo { color: #720e9e; }
         .mail-btn.apple { color: #000000; }
 
+        .copy-btn { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border); color: var(--text); border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background 0.2s; }
+        .copy-btn:hover { background: #f1f5f9; }
+
         /* ── DASHBOARD BRIDGE ── */
         .dashboard-bridge { text-align: center; margin-top: 20px; margin-bottom: 50px; }
         .dashboard-bridge a { display: inline-flex; align-items: center; gap: 8px; background: white; border: 2px solid var(--border); color: var(--primary); padding: 14px 28px; border-radius: 100px; text-decoration: none; font-weight: 700; font-size: 15px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .dashboard-bridge a:hover { border-color: var(--secondary); color: var(--secondary); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,99,235,0.1); }
 
-        /* ── MODAL ── */
+        /* ── MODALS ── */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 9999; }
         .modal-content { background: white; width: 90%; max-width: 500px; border-radius: 12px; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative; }
-        .modal-close { position: absolute; top: 16px; right: 20px; font-size: 20px; cursor: pointer; color: var(--text-muted); border: none; background: none;}
-        .modal-title { font-weight: 800; color: var(--primary); font-size: 18px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 10px;}
-        .modal-text { font-size: 13px; color: var(--text); line-height: 1.6; max-height: 60vh; overflow-y: auto;}
+        .modal-close { position: absolute; top: 16px; right: 20px; font-size: 24px; cursor: pointer; color: var(--text-muted); border: none; background: none; line-height: 1;}
+        .modal-close:hover { color: var(--accent); }
+        .modal-title { font-weight: 800; color: var(--primary); font-size: 18px; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px;}
+        .modal-text { font-size: 13.5px; color: var(--text); line-height: 1.6; max-height: 60vh; overflow-y: auto;}
 
         /* ── FOOTER ── */
         .footer { background: var(--primary); color: white; padding: 40px 20px; margin-top: auto; text-align: center; }
@@ -110,7 +115,7 @@
 
 <div class="hero">
     <h1>Fight Corporate BS. Legally.</h1>
-    <p>AI generates a fierce, legally-sound grievance notice tailored to Indian consumer laws (CCPA/RBI) in seconds.</p>
+    <p>AI generates a fierce, legally-sound grievance notice tailored to Indian consumer laws in seconds.</p>
 </div>
 
 <div class="wrapper">
@@ -125,7 +130,7 @@
                 <input type="email" id="user_email" class="styled-input" placeholder="rahul@example.com" required>
             </div>
             <div class="input-group">
-                <label>Phone Number (with Country Code)</label>
+                <label>Phone Number</label>
                 <input type="tel" id="user_phone" class="styled-input" placeholder="+91 9876543210" required>
             </div>
             <div class="input-group">
@@ -135,8 +140,8 @@
             
             <div class="input-group full-width">
                 <label>Target Company</label>
-                <input list="company_list" id="company_name" class="styled-input" placeholder="Search (e.g. Swiggy, HDFC Bank...)" autocomplete="off" required>
-                <datalist id="company_list">
+                <input list="company_db" id="target_company" class="styled-input" placeholder="Search (e.g. Swiggy, HDFC Bank...)" autocomplete="off" required>
+                <datalist id="company_db">
                     <option value="Amazon India (Amazon Seller Services Pvt Ltd)"><option value="Flipkart (Flipkart Internet Pvt Ltd)"><option value="Myntra (Myntra Designs Pvt Ltd)"><option value="Meesho (Fashnear Technologies Pvt Ltd)"><option value="Nykaa (FSN E-Commerce Ventures)"><option value="Ajio (Reliance Retail Ltd)"><option value="Tata CLiQ (Tata UniStore Ltd)"><option value="Snapdeal (Snapdeal Pvt Ltd)"><option value="Swiggy (Bundl Technologies Pvt Ltd)"><option value="Zomato (Zomato Ltd)"><option value="Blinkit (Blink Commerce Pvt Ltd)"><option value="Zepto (Kiranakart Technologies Pvt Ltd)"><option value="BigBasket (Supermarket Grocery Supplies)"><option value="JioMart (Reliance Retail Ltd)"><option value="Licious (Delightful Gourmet Pvt Ltd)">
                     <option value="Google Pay (Google India Digital Services)"><option value="PhonePe (PhonePe Pvt Ltd)"><option value="Paytm (One97 Communications Ltd)"><option value="CRED (Dreamplug Technologies Pvt Ltd)"><option value="BharatPe (Resilient Innovations Pvt Ltd)"><option value="MobiKwik (One MobiKwik Systems Ltd)"><option value="Freecharge (Freecharge Payment Technologies)"><option value="Amazon Pay (Amazon Pay India Pvt Ltd)"><option value="Slice (Garagepreneurs Internet Pvt Ltd)"><option value="Jupiter (Amica Financial Technologies)">
                     <option value="HDFC Bank (HDFC Bank Limited)"><option value="SBI (State Bank of India)"><option value="ICICI Bank (ICICI Bank Limited)"><option value="Axis Bank (Axis Bank Limited)"><option value="Kotak Mahindra Bank (Kotak Mahindra Bank Ltd)"><option value="Punjab National Bank (PNB)"><option value="Bank of Baroda (BoB)"><option value="IndusInd Bank (IndusInd Bank Limited)"><option value="IDFC First Bank (IDFC FIRST Bank Ltd)"><option value="Yes Bank (YES BANK Limited)">
@@ -146,6 +151,7 @@
                     <option value="IndiGo (InterGlobe Aviation Ltd)"><option value="Air India (Air India Ltd)"><option value="SpiceJet (SpiceJet Ltd)"><option value="Akasa Air (SNV Aviation Pvt Ltd)"><option value="Air India Express (Air India Express Ltd)">
                     <option value="Samsung India (Samsung India Electronics)"><option value="Apple India (Apple India Pvt Ltd)"><option value="Xiaomi India (Xiaomi Technology India)"><option value="OnePlus India (OPlus Mobitech India)"><option value="Dell India (Dell International Services)"><option value="HP India (HP India Sales Pvt Ltd)"><option value="Lenovo India (Lenovo India Pvt Ltd)"><option value="LG India (LG Electronics India Pvt Ltd)"><option value="Sony India (Sony India Pvt Ltd)"><option value="boAt Lifestyle (Imagine Marketing Ltd)"><option value="Urban Company (UrbanClap Technologies)">
                 </datalist>
+                <div class="company-error" id="company_error">⚠ Please select a verified company from the dropdown.</div>
             </div>
 
             <div class="input-group full-width">
@@ -155,47 +161,45 @@
 
             <div class="input-group full-width">
                 <label>Complaint Details</label>
-                <textarea id="complaint_details" class="styled-textarea" placeholder="Briefly explain what went wrong. Did they refuse a refund? Cancel your order without paying you back?" required></textarea>
+                <textarea id="complaint_details" class="styled-textarea" placeholder="Briefly explain what went wrong. Be specific about dates and what was denied." required></textarea>
             </div>
         </div>
 
         <div class="consent-box">
             <input type="checkbox" id="legal_consent">
             <label for="legal_consent">
-                I agree to the <a onclick="openModal()">Terms & Conditions</a>. I confirm I am NOT submitting any banking passwords, OTPs, or sensitive financial PINs.
+                I agree to the <a onclick="document.getElementById('tc_modal').style.display='flex'">Terms of Service</a>. I understand this is an AI formatting tool, not legal counsel, and I confirm I am NOT submitting passwords or PINs.
             </label>
         </div>
 
-        <button class="btn-generate" id="generate_btn" onclick="generateDraft()">
+        <button class="btn-generate" id="submit_btn" onclick="generateDraft()">
             <div class="spinner" id="btn_spinner"></div>
-            <span id="btn_text">Draft Legal Notice ⚡</span>
+            <span id="btn_text">Generate Formal Notice</span>
         </button>
 
-        <div id="result_area">
-            <h3 style="color: var(--primary); margin-bottom: 15px;">Your Legal Package is Ready</h3>
+        <div id="result_section">
+            <h3 style="color: var(--primary); margin-bottom: 15px; font-weight: 800;">Your Legal Package is Ready</h3>
             
             <div class="target-box">
-                <div class="target-info">
-                    Verified Nodal Officer Email: <br>
-                    <strong id="target_email">...</strong>
-                </div>
+                <div class="target-info">To (Nodal Officer): <br><strong id="out_email">...</strong></div>
+                <div class="target-info">Subject Line: <br><strong id="out_subject">...</strong></div>
             </div>
 
             <div class="proof-warning">
-                ⚠️ STOP: You must manually attach your proof (screenshots, receipts, chat logs) before you click send in your email client!
+                ⚠️ CRITICAL STEP: You must MANUALLY attach your screenshots, receipts, and proofs on the next screen before you hit Send in your email client!
             </div>
 
-            <div class="draft-box">
-                <div class="draft-content" id="draft_text"></div>
-            </div>
+            <div class="draft-box" id="out_body"></div>
 
             <h4 style="color: var(--primary); margin-bottom: 10px;">Select your email provider to send:</h4>
             <div class="mail-grid">
-                <button class="mail-btn gmail" onclick="sendMail('gmail')">✉️ Send via Gmail</button>
-                <button class="mail-btn outlook" onclick="sendMail('outlook')">📧 Send via Outlook</button>
-                <button class="mail-btn yahoo" onclick="sendMail('yahoo')">🟣 Send via Yahoo</button>
-                <button class="mail-btn apple" onclick="sendMail('default')">📱 Send via Apple / Default</button>
+                <button class="mail-btn gmail" id="gmail_btn">🔴 Gmail</button>
+                <button class="mail-btn outlook" id="outlook_btn">🔵 Outlook</button>
+                <button class="mail-btn yahoo" id="yahoo_btn">🟣 Yahoo</button>
+                <button class="mail-btn apple" id="apple_btn"> Apple / Default</button>
             </div>
+            
+            <button class="copy-btn" onclick="copyDraft()">📋 Copy Draft to Clipboard</button>
         </div>
     </div>
 
@@ -209,9 +213,10 @@
 
 <footer class="footer">
     <div class="footer-links">
-        <a href="mailto:thesoverignsentinel@gmail.com">Contact Us</a>
-        <a onclick="openModal()">Terms & Conditions</a>
-        <a href="mailto:thesoverignsentinel@gmail.com">Investor Relations</a>
+        <a onclick="document.getElementById('contact_modal').style.display='flex'">Contact Us</a>
+        <a onclick="document.getElementById('tc_modal').style.display='flex'">Terms & Conditions</a>
+        <a onclick="document.getElementById('tc_modal').style.display='flex'">Privacy Policy</a>
+        <a onclick="document.getElementById('contact_modal').style.display='flex'">Investor Relations</a>
     </div>
     <div class="footer-text">
         &copy; 2026 Karma Claims. All rights reserved.<br>
@@ -221,13 +226,30 @@
 
 <div class="modal-overlay" id="tc_modal">
     <div class="modal-content">
-        <button class="modal-close" onclick="closeModal()">×</button>
-        <h2 class="modal-title">Terms & Conditions</h2>
+        <button class="modal-close" onclick="document.getElementById('tc_modal').style.display='none'">×</button>
+        <h2 class="modal-title">Terms of Service & Disclaimer</h2>
         <div class="modal-text">
-            <p><strong>1. Not Legal Advice:</strong> Karma Claims is an AI-powered formatting tool designed to structure grievances according to general Indian consumer protection frameworks (e.g., CCPA, RBI). It does not provide formal legal counsel. Using this tool does not create an attorney-client relationship.</p>
-            <p style="margin-top: 10px;"><strong>2. No Liability:</strong> The developers and owners of Karma Claims cannot be sued, held liable, or made legally responsible for any outcomes, lost funds, ignored emails, or corporate retaliation resulting from the use of the generated text. Users send these notices at their own risk.</p>
-            <p style="margin-top: 10px;"><strong>3. Data Safety:</strong> You must never input your banking passwords, OTPs, CVVs, or ATM PINs into this platform. We only require the Order/Transaction ID for reference formatting.</p>
-            <p style="margin-top: 10px;"><strong>4. Monitoring:</strong> By using the automated email links provided, you consent to blind-copying (BCC) the platform administrator strictly for the purpose of tracking metric success rates and abuse prevention.</p>
+            <strong>1. Not Legal Advice</strong>
+            <p>Karma Claims is an AI-powered drafting tool designed to structure grievances according to general Indian consumer protection frameworks (e.g., CCPA, RBI). It does not provide formal legal counsel. Using this tool does not create an attorney-client relationship.</p>
+            <br><strong>2. No Liability & User Responsibility</strong>
+            <p>You are solely responsible for the accuracy of the claims made. The developers of Karma Claims cannot be sued, held liable, or made legally responsible for any outcomes, lost funds, ignored emails, or corporate retaliation resulting from the use of the generated text.</p>
+            <br><strong>3. Data Safety & Monitoring</strong>
+            <p>You must never input banking passwords, OTPs, CVVs, or ATM PINs into this platform. By using the automated email links provided, you consent to blind-copying (BCC) the platform administrator strictly for the purpose of tracking metric success rates and abuse prevention.</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="contact_modal">
+    <div class="modal-content" style="text-align: center;">
+        <button class="modal-close" onclick="document.getElementById('contact_modal').style.display='none'">×</button>
+        <h2 class="modal-title">Contact Karma Claims</h2>
+        <div class="modal-text">
+            <p>Karma Claims is a bootstrapped legal-tech initiative dedicated to fighting corporate impunity.</p><br>
+            <p><strong>For Consumer Support & Investor Relations:</strong><br>
+            <span style="color: var(--secondary); font-size: 16px; font-weight: 600;">thesoverignsentinel@gmail.com</span></p><br>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">
+                *(Note: Please do not send sensitive passwords or PINs to these email addresses)*
+            </p>
         </div>
     </div>
 </div>
@@ -235,87 +257,119 @@
 <script>
     const API_BASE = "https://karma-claims-backend.onrender.com";
 
-    // Modal Logic
-    function openModal() { document.getElementById('tc_modal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('tc_modal').style.display = 'none'; }
-
-    let currentDraft = "";
-    let currentEmail = "";
-    let currentSubject = "";
+    function copyDraft() {
+        const draftText = document.getElementById("out_body").innerText;
+        navigator.clipboard.writeText(draftText).then(() => {
+            alert("Draft successfully copied to your clipboard!");
+        }).catch(err => alert("Failed to copy text."));
+    }
 
     async function generateDraft() {
-        const consent = document.getElementById('legal_consent').checked;
-        if (!consent) { alert("You must agree to the Terms & Conditions and confirm you are not submitting sensitive passwords."); return; }
+        const userInput = document.getElementById("target_company").value.trim();
+        const datalistOptions = document.getElementById("company_db").options;
+        const consent = document.getElementById("legal_consent").checked;
+        const btn = document.getElementById("submit_btn");
+        const btnText = document.getElementById("btn_text");
+        const spinner = document.getElementById("btn_spinner");
+
+        // Strict Validation (From V2.6)
+        let isValid = Array.from(datalistOptions).some(opt => opt.value === userInput);
+        if (!isValid) { document.getElementById("company_error").style.display = "block"; return; }
+        document.getElementById("company_error").style.display = "none";
+        
+        if (!consent) { alert("Please accept the Terms of Service to continue."); return; }
 
         const payload = {
-            user_name: document.getElementById('user_name').value.trim(),
-            user_email: document.getElementById('user_email').value.trim(),
-            user_phone: document.getElementById('user_phone').value.trim(),
-            company_name: document.getElementById('company_name').value.trim(),
-            order_id: document.getElementById('order_id').value.trim(),
-            disputed_amount: document.getElementById('disputed_amount').value.trim(),
-            complaint_details: document.getElementById('complaint_details').value.trim()
+            user_name: document.getElementById("user_name").value.trim(),
+            user_email: document.getElementById("user_email").value.trim(),
+            user_phone: document.getElementById("user_phone").value.trim(),
+            company_name: userInput,
+            order_id: document.getElementById("order_id").value.trim(),
+            disputed_amount: document.getElementById("disputed_amount").value.trim(),
+            complaint_details: document.getElementById("complaint_details").value.trim()
         };
 
-        if (!payload.user_name || !payload.company_name || !payload.complaint_details) {
+        if (!payload.user_name || !payload.order_id || !payload.complaint_details) {
             alert("Please fill in all required fields."); return;
         }
 
-        const btn = document.getElementById('generate_btn');
-        const spinner = document.getElementById('btn_spinner');
-        const btnText = document.getElementById('btn_text');
-        const resultArea = document.getElementById('result_area');
-
-        btn.disabled = true; spinner.style.display = 'block'; btnText.innerText = 'Drafting...'; resultArea.style.display = 'none';
+        btn.disabled = true; spinner.style.display = 'block'; btnText.innerText = 'Compiling Notice...';
 
         try {
-            const res = await fetch(`${API_BASE}/generate-draft`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+            const response = await fetch(`${API_BASE}/generate-draft`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
             });
-            
-            if (res.status === 429) throw new Error("Too many requests! Please wait a minute.");
-            if (!res.ok) throw new Error("AI Engine is currently overloaded.");
 
-            const data = await res.json();
-            
-            // Append the Proof string to the AI draft
-            currentDraft = data.draft + "\n\n*** Please find attached proof of my transaction and prior communications. ***";
-            currentEmail = data.target_email;
-            currentSubject = `URGENT LEGAL GRIEVANCE: Order ${payload.order_id} - ${payload.user_name}`;
-            
-            document.getElementById('target_email').innerText = currentEmail;
-            document.getElementById('draft_text').innerText = currentDraft;
-            resultArea.style.display = 'block';
-            resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (response.ok) {
+                const data = await response.json();
+                
+                // Display Results UI (From V2.6)
+                document.getElementById("result_section").style.display = "block";
+                document.getElementById("out_email").innerText = data.target_email;
+                document.getElementById("out_subject").innerText = data.subject;
+                document.getElementById("out_body").innerText = data.draft;
 
+                // Mailing System & Fallback Logic (From V2.6)
+                const bccEmail = "thesoverignsentinel@gmail.com";
+                const safeBody = encodeURIComponent(data.draft);
+                const safeSubject = encodeURIComponent(data.subject);
+                const attachmentWarning = "⚠️ CRITICAL STEP:\n\nYou must MANUALLY attach your screenshots, receipts, and proofs on the next screen before you hit Send.\n\nClick OK to open your email app.";
+                
+                // Heavy Notice Fallback
+                if (safeBody.length > 7000) {
+                    const heavyNotice = function () {
+                        navigator.clipboard.writeText(data.draft).then(() => {
+                            alert("⚠️ This legal notice is highly detailed and exceeds automatic email limits.\n\n✅ It has been securely copied to your clipboard. Please open your mail app and paste it manually.");
+                        });
+                    };
+                    document.getElementById("gmail_btn").onclick = heavyNotice;
+                    document.getElementById("outlook_btn").onclick = heavyNotice;
+                    document.getElementById("yahoo_btn").onclick = heavyNotice;
+                    document.getElementById("apple_btn").onclick = heavyNotice;
+                } else {
+                    document.getElementById("gmail_btn").onclick = function () {
+                        alert(attachmentWarning);
+                        window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${data.target_email}&bcc=${bccEmail}&su=${safeSubject}&body=${safeBody}`, '_blank');
+                    };
+                    document.getElementById("outlook_btn").onclick = function () {
+                        alert(attachmentWarning);
+                        window.open(`https://outlook.live.com/mail/0/deeplink/compose?to=${data.target_email}&bcc=${bccEmail}&subject=${safeSubject}&body=${safeBody}`, '_blank');
+                    };
+                    document.getElementById("yahoo_btn").onclick = function () {
+                        alert(attachmentWarning);
+                        window.open(`https://compose.mail.yahoo.com/?to=${data.target_email}&bcc=${bccEmail}&subject=${safeSubject}&body=${safeBody}`, '_blank');
+                    };
+                    document.getElementById("apple_btn").onclick = function () {
+                        alert(attachmentWarning);
+                        window.location.href = `mailto:${data.target_email}?bcc=${bccEmail}&subject=${safeSubject}&body=${safeBody}`;
+                    };
+                }
+
+                document.getElementById("result_section").scrollIntoView({ behavior: "smooth", block: "start" });
+            } else if (response.status === 422) {
+                alert("Security Error: Please ensure all fields are filled out correctly without special code characters.");
+            } else if (response.status === 429) {
+                alert("Rate limit exceeded. Please wait a minute before generating another notice.");
+            } else {
+                alert("Server error. Please wait 30 seconds and try again.");
+            }
         } catch (err) {
-            alert("Error: " + err.message);
+            alert("Network error. Ensure the server is online.");
         } finally {
-            btn.disabled = false; spinner.style.display = 'none'; btnText.innerText = 'Draft Legal Notice ⚡';
+            btn.disabled = false; spinner.style.display = 'none'; btnText.innerText = 'Generate Formal Notice';
         }
     }
 
-    function sendMail(provider) {
-        const bcc = "thesoverignsentinel@gmail.com";
-        const subject = encodeURIComponent(currentSubject);
-        const body = encodeURIComponent(currentDraft);
-        const to = encodeURIComponent(currentEmail);
-        
-        let url = "";
-        
-        if (provider === 'gmail') {
-            url = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&bcc=${bcc}&su=${subject}&body=${body}`;
-        } else if (provider === 'outlook') {
-            url = `https://outlook.live.com/mail/0/deeplink/compose?to=${to}&bcc=${bcc}&subject=${subject}&body=${body}`;
-        } else if (provider === 'yahoo') {
-            url = `https://compose.mail.yahoo.com/?to=${to}&bcc=${bcc}&subject=${subject}&body=${body}`;
-        } else {
-            // Default mailto protocol (Apple Mail / Windows Mail)
-            url = `mailto:${to}?bcc=${bcc}&subject=${subject}&body=${body}`;
-        }
-        
-        window.open(url, '_blank');
-    }
+    // --- SECURITY BOUNCER: Disable Right-Click and View Source ---
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.onkeydown = function(e) { 
+        if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) { 
+            return false; 
+        } 
+    };
 </script>
+
 </body>
 </html>
