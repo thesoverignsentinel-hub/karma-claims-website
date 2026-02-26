@@ -179,7 +179,7 @@
         .t-dot:nth-child(2) { animation-delay: 0.2s; } .t-dot:nth-child(3) { animation-delay: 0.4s; }
         @keyframes typeBounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
 
-        #chat-input-area { border-top: 1px solid var(--border); padding: 10px 12px; display: flex; gap: 8px; background: white; }
+        #chat-input-area { border-top: 1px solid var(--border); padding: 10px 12px; display: flex; gap: 8px; background: white; align-items: center;}
         #chat-input { flex: 1; padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13.5px; font-family: 'Inter', sans-serif; transition: border-color 0.2s; }
         #chat-input:focus { outline: none; border-color: var(--secondary); }
         #chat-send { background: var(--secondary); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 13.5px; cursor: pointer; transition: background 0.2s; width: auto; }
@@ -203,7 +203,7 @@
     </div>
     <div class="nav-status">
         <div class="status-dot"></div>
-        v5.0 Online
+        v5.2 Online
     </div>
 </nav>
 
@@ -365,9 +365,18 @@
         <span class="ch-close">×</span>
     </div>
     <div id="chat-body">
-        <div class="bot-msg">Hi! I'm your legal strategist. What hurdle is the company throwing at you today?</div>
+        <div class="bot-msg">Hi! I'm your legal strategist. Upload their rejection email screenshot or tell me what hurdle they are throwing at you.</div>
     </div>
+    
+    <div id="chat_image_preview_container" style="display: none; padding: 8px 12px; background: white; border-top: 1px solid var(--border); align-items: center; gap: 10px; font-size: 12px;">
+        <span style="color: var(--text-muted); font-weight: 600;">Attached:</span>
+        <img id="chat_image_preview" style="height: 36px; border-radius: 4px; border: 1px solid var(--border);">
+        <span onclick="clearChatImage()" style="cursor: pointer; color: var(--accent); font-weight: bold; font-size: 14px; margin-left: auto;">✖</span>
+    </div>
+
     <div id="chat-input-area">
+        <input type="file" id="chat_file_upload" accept="image/*" style="display: none;" onchange="handleChatImageSelection()">
+        <button onclick="document.getElementById('chat_file_upload').click()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-muted); padding: 0 4px;" title="Attach Corporate Email Screenshot">📎</button>
         <input type="text" id="chat-input" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter') sendToChat()">
         <button id="chat-send" onclick="sendToChat()">↑</button>
     </div>
@@ -610,8 +619,10 @@
         })();
     }
 
-    // ── CHAT ──
+    // ── AI STRATEGIST CHAT LOGIC (With Vision) ──
     let chatOpen = false;
+    let currentChatBase64 = null;
+
     function toggleChat() {
         chatOpen = !chatOpen;
         const w = document.getElementById('chat-widget');
@@ -619,15 +630,43 @@
         if (chatOpen) document.getElementById('chat-input').focus();
     }
 
+    function handleChatImageSelection() {
+        const file = document.getElementById('chat_file_upload').files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onloadend = function() {
+            currentChatBase64 = reader.result;
+            document.getElementById('chat_image_preview').src = currentChatBase64;
+            document.getElementById('chat_image_preview_container').style.display = 'flex';
+        }
+        reader.readAsDataURL(file);
+    }
+
+    function clearChatImage() {
+        currentChatBase64 = null;
+        document.getElementById('chat_file_upload').value = "";
+        document.getElementById('chat_image_preview_container').style.display = 'none';
+    }
+
     async function sendToChat() {
         const input = document.getElementById('chat-input');
         const body = document.getElementById('chat-body');
         const msg = input.value.trim();
-        if (!msg) return;
+        
+        if (!msg && !currentChatBase64) return;
 
-        body.innerHTML += `<div class="user-msg">${msg}</div>`;
+        let userMsgHtml = msg;
+        if (currentChatBase64) {
+            userMsgHtml = `<img src="${currentChatBase64}" style="max-width: 100%; border-radius: 6px; margin-bottom: 5px;"><br>` + msg;
+        }
+
+        body.innerHTML += `<div class="user-msg">${userMsgHtml}</div>`;
         input.value = '';
         body.scrollTop = body.scrollHeight;
+
+        const payloadImage = currentChatBase64;
+        clearChatImage();
 
         const tid = 'typ-' + Date.now();
         body.innerHTML += `<div class="typing-indicator" id="${tid}"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div>`;
@@ -637,7 +676,10 @@
             const res = await fetch(`${API_BASE}/api/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_message: msg })
+                body: JSON.stringify({ 
+                    user_message: msg,
+                    image_base64: payloadImage 
+                })
             });
             const d = await res.json();
             document.getElementById(tid)?.remove();
