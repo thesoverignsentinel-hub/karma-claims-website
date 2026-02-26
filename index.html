@@ -499,8 +499,11 @@
             const d = await res.json();
             document.getElementById(tid)?.remove();
             
+            // --- THE SAFETY CATCH ---
+            const safeReply = d.reply || d.detail || d.error || "⚠️ The system is busy. Please try again in a moment.";
+            
             if (d.status === "complete" && d.extracted_data) {
-                body.innerHTML += `<div style="background: var(--success); color: white; padding: 12px; border-radius: 12px; align-self: flex-start; max-width: 85%;">🚨 ${d.reply}</div>`;
+                body.innerHTML += `<div style="background: var(--success); color: white; padding: 12px; border-radius: 12px; align-self: flex-start; max-width: 85%;">🚨 ${safeReply}</div>`;
                 body.scrollTop = body.scrollHeight;
                 
                 const legalData = JSON.parse(d.extracted_data);
@@ -509,7 +512,6 @@
                 document.getElementById('disputed_amount').value = (legalData.disputed_amount || "").replace(/\D/g,'') || "0";
                 document.getElementById('order_id').value = legalData.order_id || "N/A";
                 
-                // Keep image context alive in the complaint box if they uploaded one
                 const autoReason = payloadImage ? "Auto-extracted from attached evidence: " : "Auto-extracted by AI Intake Copilot:\n\n";
                 document.getElementById('complaint_details').value = autoReason + msg;
                 document.getElementById('legal_consent').checked = true;
@@ -520,14 +522,17 @@
                 }, 1500);
                 
             } else {
-                body.innerHTML += `<div style="background: white; border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 12px; border-bottom-left-radius: 4px; align-self: flex-start; max-width: 85%; line-height: 1.5;">${d.reply}</div>`;
-                triageHistory.push({ role: "user", content: msg }, { role: "assistant", content: d.reply });
+                body.innerHTML += `<div style="background: white; border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 12px; border-bottom-left-radius: 4px; align-self: flex-start; max-width: 85%; line-height: 1.5;">${safeReply}</div>`;
+                
+                // Only save to history if it was a real AI reply, not an error!
+                if (d.reply) {
+                    triageHistory.push({ role: "user", content: msg }, { role: "assistant", content: safeReply });
+                }
             }
         } catch (e) {
             document.getElementById(tid)?.remove();
             body.innerHTML += `<div style="background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 12px; align-self: flex-start;">⚠️ Connection error.</div>`;
         }
-        body.scrollTop = body.scrollHeight;
     }
     
     // --- SECURITY BOUNCER: Disable Right-Click and View Source ---

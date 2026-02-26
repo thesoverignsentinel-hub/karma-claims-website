@@ -683,12 +683,15 @@
             });
             const d = await res.json();
             document.getElementById(tid)?.remove();
-            body.innerHTML += `<div class="bot-msg">${d.reply}</div>`;
+            
+            // --- THE SAFETY CATCH ---
+            const safeReply = d.reply || d.detail || d.error || "⚠️ The AI Strategist is currently processing too many requests. Please wait a moment.";
+            
+            body.innerHTML += `<div class="bot-msg">${safeReply}</div>`;
         } catch (e) {
             document.getElementById(tid)?.remove();
             body.innerHTML += `<div class="bot-msg" style="color:#dc2626">⚠️ Strategist is offline right now.</div>`;
         }
-        body.scrollTop = body.scrollHeight;
     }
 
     window.onload = loadDashboard;
