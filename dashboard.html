@@ -173,6 +173,10 @@
         .bot-msg, .user-msg { padding: 9px 12px; border-radius: 10px; max-width: 88%; font-size: 13.5px; line-height: 1.5; animation: fadeUp 0.2s ease; }
         .bot-msg { background: white; border: 1px solid var(--border); color: #334155; align-self: flex-start; border-bottom-left-radius: 3px; }
         .user-msg { background: var(--secondary); color: white; align-self: flex-end; border-bottom-right-radius: 3px; }
+        
+        /* THE LABOR ILLUSION ANIMATION */
+        .labor-illusion { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; color: var(--secondary); font-weight: 500; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         .typing-indicator { display: flex; gap: 4px; padding: 10px 13px; background: white; border: 1px solid var(--border); border-radius: 10px; border-bottom-left-radius: 3px; width: fit-content; align-self: flex-start; }
         .t-dot { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: typeBounce 1.2s ease-in-out infinite; }
@@ -669,28 +673,35 @@
         clearChatImage();
 
         const tid = 'msg-' + Date.now();
-// Start with the first thinking state
-body.innerHTML += `<div id="${tid}" class="bot-msg" style="font-weight: 500; color: var(--secondary);">⚡ Initializing Legal Engine...</div>`;
-body.scrollTop = body.scrollHeight;
+        
+        // 1. Initial State (0 seconds)
+        body.innerHTML += `
+            <div id="${tid}" class="bot-msg labor-illusion" style="display: flex; gap: 8px; align-items: center;">
+                <span class="loader-icon" style="font-size: 1.1rem;">🔍</span>
+                <span class="loader-text">Querying legal database for applicable sector regulations...</span>
+            </div>`;
+        body.scrollTop = body.scrollHeight;
 
-// The AI's internal thought process array
-const thinkingSteps = [
-    "Scanning Federal Consumer Laws...",
-    "Cross-Examining Corporate Defense Tactics...",
-    "Identifying Jurisdiction Loopholes...",
-    "Drafting Sovereign Sentinel Attack Plan..."
-];
+        // 2. Timed Stages
+        const illusionTimeouts = [];
+        
+        // Stage 2 (Fires at 4 seconds)
+        illusionTimeouts.push(setTimeout(() => {
+            const loader = document.getElementById(tid);
+            if (loader) {
+                loader.querySelector(".loader-icon").innerText = "⚖️";
+                loader.querySelector(".loader-text").innerText = "Evaluating claim against standard corporate policies and statutory rules...";
+            }
+        }, 4000));
 
-let stepIndex = 0;
-const loadingDiv = document.getElementById(tid);
-
-// Change the text every 1.5 seconds to simulate deep reasoning
-const thinkingInterval = setInterval(() => {
-    if (loadingDiv) {
-        loadingDiv.innerHTML = `⚡ ${thinkingSteps[stepIndex]}`;
-        stepIndex = (stepIndex + 1) % thinkingSteps.length;
-    }
-}, 1500);
+        // Stage 3 (Fires at 8 seconds)
+        illusionTimeouts.push(setTimeout(() => {
+            const loader = document.getElementById(tid);
+            if (loader) {
+                loader.querySelector(".loader-icon").innerText = "📝";
+                loader.querySelector(".loader-text").innerText = "Formatting legal response based on verified statutory precedents...";
+            }
+        }, 8000));
 
         try {
             const res = await fetch(`${API_BASE}/api/chat`, {
@@ -702,16 +713,20 @@ const thinkingInterval = setInterval(() => {
                 })
             });
             const d = await res.json();
-            clearInterval(thinkingInterval); // Stop the thinking animation
-            document.getElementById(tid)?.remove(); // Remove the loading bubble
+            
+            illusionTimeouts.forEach(clearTimeout); 
+            document.getElementById(tid)?.remove(); 
             
             // --- THE SAFETY CATCH ---
             const safeReply = d.reply || d.detail || d.error || "⚠️ The AI Strategist is currently processing too many requests. Please wait a moment.";
             
             body.innerHTML += `<div class="bot-msg">${safeReply}</div>`;
+            body.scrollTop = body.scrollHeight;
         } catch (e) {
+            illusionTimeouts.forEach(clearTimeout);
             document.getElementById(tid)?.remove();
             body.innerHTML += `<div class="bot-msg" style="color:#dc2626">⚠️ Strategist is offline right now.</div>`;
+            body.scrollTop = body.scrollHeight;
         }
     }
 
