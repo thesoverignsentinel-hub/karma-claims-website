@@ -668,9 +668,29 @@
         const payloadImage = currentChatBase64;
         clearChatImage();
 
-        const tid = 'typ-' + Date.now();
-        body.innerHTML += `<div class="typing-indicator" id="${tid}"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div>`;
-        body.scrollTop = body.scrollHeight;
+        const tid = 'msg-' + Date.now();
+// Start with the first thinking state
+body.innerHTML += `<div id="${tid}" class="bot-msg" style="font-weight: 500; color: var(--secondary);">⚡ Initializing Legal Engine...</div>`;
+body.scrollTop = body.scrollHeight;
+
+// The AI's internal thought process array
+const thinkingSteps = [
+    "Scanning Federal Consumer Laws...",
+    "Cross-Examining Corporate Defense Tactics...",
+    "Identifying Jurisdiction Loopholes...",
+    "Drafting Sovereign Sentinel Attack Plan..."
+];
+
+let stepIndex = 0;
+const loadingDiv = document.getElementById(tid);
+
+// Change the text every 1.5 seconds to simulate deep reasoning
+const thinkingInterval = setInterval(() => {
+    if (loadingDiv) {
+        loadingDiv.innerHTML = `⚡ ${thinkingSteps[stepIndex]}`;
+        stepIndex = (stepIndex + 1) % thinkingSteps.length;
+    }
+}, 1500);
 
         try {
             const res = await fetch(`${API_BASE}/api/chat`, {
@@ -682,7 +702,8 @@
                 })
             });
             const d = await res.json();
-            document.getElementById(tid)?.remove();
+            clearInterval(thinkingInterval); // Stop the thinking animation
+            document.getElementById(tid)?.remove(); // Remove the loading bubble
             
             // --- THE SAFETY CATCH ---
             const safeReply = d.reply || d.detail || d.error || "⚠️ The AI Strategist is currently processing too many requests. Please wait a moment.";
