@@ -108,6 +108,12 @@
         .user-msg { background: var(--secondary); color: white; padding: 12px 16px; border-radius: 12px 12px 0 12px; font-size: 14px; align-self: flex-end; max-width: 85%; line-height: 1.5; }
         .correction-trigger { font-size: 11px; color: var(--text-muted); cursor: pointer; background: none; border: none; margin-top: 4px; padding: 0 4px; }
         .correction-trigger:hover { color: var(--accent); text-decoration: underline; }
+        .feedback-row { display: flex; gap: 6px; margin-top: 6px; align-items: center; }
+        .fb-btn { font-size: 11px; padding: 3px 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; transition: opacity 0.2s; }
+        .fb-btn:hover { opacity: 0.8; }
+        .fb-correct { background: #dcfce7; color: #14532d; }
+        .fb-wrong { background: #fee2e2; color: #7f1d1d; }
+        .fb-sent { background: #f1f5f9; color: #64748b; cursor: default; }
         
         .chat-input-area { padding: 15px; background: white; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
         .chat-input-area input { flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 20px; outline: none; }
@@ -930,7 +936,11 @@ placeholder="Describe your issue — or paste the company's reply here..."
             let msgHtml = `
                 <div class="bot-msg-container" style="width: 100%;">
                     <div class="bot-msg" style="width: 100%;">${data.reply.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')}</div>
-                    <button class="correction-trigger" onclick="openCorrection('${data.reply.replace(/'/g, "\\'").substring(0,40)}')">✏️ Propose Correction</button>
+                    <div class="feedback-row">
+                        <button class="fb-btn fb-correct" onclick="sendFeedback(this, 'correct')">✅ Correct</button>
+                        <button class="fb-btn fb-wrong" onclick="sendFeedback(this, 'wrong_law')">❌ Wrong law</button>
+                        <button class="correction-trigger" onclick="openCorrection('${data.reply.replace(/'/g, "\\'").substring(0,40)}')">✏️ Propose Correction</button>
+                    </div>
             `;
 
             // --- 1-CLICK DISPATCH (GATED BEHIND AUTH) ---
@@ -1164,7 +1174,24 @@ if (loader) loader.remove();
         } catch (e) { console.error("Failed to load session messages."); }
     }
 
-    // --- 5. AUDITOR ---
+    // --- 5. FEEDBACK LOOP (Self-improving AI) ---
+    async function sendFeedback(btn, outcome) {
+        try {
+            const sector = localStorage.getItem('active_sector') || 'General';
+            await fetch(`${API_BASE}/api/feedback`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: activeSessionId,
+                    outcome: outcome,
+                    sector: sector
+                })
+            });
+            btn.parentElement.innerHTML = '<span style="font-size:11px; color:#64748b;">✓ Saved — making Karma AI smarter</span>';
+        } catch(e) { console.log('Feedback error:', e); }
+    }
+
+    // --- 6. AUDITOR ---
     function openCorrection(claim) {
         currentFaultyClaim = claim;
         document.getElementById('correction_modal').style.display = 'flex';
